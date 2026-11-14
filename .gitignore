@@ -112,3 +112,4 @@ BuildTools/.swiftpm
 *.app
 *.dmg
 dist/
+*.profraw
