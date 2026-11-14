@@ -12,28 +12,4 @@ extension AppPathManager {
     var cacheDirectory: URL {
         appSupportDirectory.appendingPathComponent("cache", isDirectory: true)
     }
-
-    /// The directory containing downloaded pronunciation audio.
-    var audioCacheDirectory: URL {
-        cacheDirectory.appendingPathComponent("audio", isDirectory: true)
-    }
-
-    var mdictMetadataCacheDirectory: URL {
-        cacheDirectory.appendingPathComponent("mdict-metadata", isDirectory: true)
-    }
-
-    var githubCopilotModelCatalogURL: URL {
-        cacheDirectory.appendingPathComponent("github-copilot", isDirectory: true)
-            .appendingPathComponent("models.json")
-    }
-
-    /// The previous downloaded pronunciation audio location.
-    var legacyAudioCacheDirectory: URL {
-        cachesDirectory.appendingPathComponent("audio", isDirectory: true)
-    }
-
-    /// The previous MDict metadata cache location.
-    var legacyMDictMetadataCacheDirectory: URL {
-        appSupportDirectory.appendingPathComponent("mdict-metadata-cache", isDirectory: true)
-    }
 }

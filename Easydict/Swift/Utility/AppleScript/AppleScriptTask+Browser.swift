@@ -13,9 +13,6 @@ extension AppleScriptTask {
     enum BrowserAction {
         case getCurrentTabURL
         case getSelectedText
-        case getTextFieldText
-        case insertText(String)
-        case selectAllText
     }
 
     class func isBrowserSupportingAppleScript(_ bundleID: String) -> Bool {
@@ -36,26 +33,6 @@ extension AppleScriptTask {
 
     class func getCurrentTabURLFromBrowser(_ bundleID: String) async throws -> String? {
         try await executeBrowserAction(.getCurrentTabURL, bundleID: bundleID)
-    }
-
-    class func insertTextInBrowser(_ text: String, bundleID: String) async throws -> Bool {
-        do {
-            let result = try await executeBrowserAction(.insertText(text), bundleID: bundleID) ?? ""
-            return result.boolValue
-        } catch {
-            logInfo("Failed to insert text in browser: \(error)")
-            return false
-        }
-    }
-
-    class func selectAllInputTextInBrowser(_ bundleID: String) async throws -> Bool {
-        do {
-            let result = try await executeBrowserAction(.selectAllText, bundleID: bundleID) ?? ""
-            return result.boolValue
-        } catch {
-            logInfo("Failed to select all text in browser: \(error)")
-            return false
-        }
     }
 
     // MARK: Private
@@ -106,41 +83,6 @@ extension AppleScriptTask {
             end tell
             """
             return (script, 0.2, "Chrome Browser selected text")
-
-        case .getTextFieldText:
-            let script = """
-            tell application id "\(bundleID)"
-                tell active tab of front window
-                    set inputText to execute javascript "
-                        \(getTextFieldTextScript())
-                    "
-                end tell
-            end tell
-            """
-            return (script, 0.2, "Chrome Browser text field text")
-
-        case let .insertText(text):
-            let escapedText = escapeJavaScriptString(text)
-            let script = """
-            tell application id "\(bundleID)"
-               tell active tab of front window
-                    execute javascript "document.execCommand('insertText', false, '\(escapedText)')"
-               end tell
-            end tell
-            """
-            return (script, nil, "Chrome insert text result")
-
-        case .selectAllText:
-            let script = """
-            tell application id "\(bundleID)"
-               tell active tab of front window
-                   execute javascript "
-                       \(getSelectAllInputTextScript())
-                   "
-               end tell
-            end tell
-            """
-            return (script, nil, "Chrome select all text result")
         }
     }
 
@@ -168,91 +110,10 @@ extension AppleScriptTask {
             end tell
             """
             return (script, 0.2, "Safari selected text")
-
-        case .getTextFieldText:
-            let script = """
-            tell application id "\(bundleID)"
-                do JavaScript "
-                    \(getTextFieldTextScript())
-                " in document 1
-            end tell
-            """
-            return (script, 0.2, "Safari text field text")
-
-        case let .insertText(text):
-            logInfo("Inserting text into Safari: \(text)")
-            let escapedText = escapeJavaScriptString(text)
-            let script = """
-            tell application id "\(bundleID)"
-                do JavaScript "document.execCommand('insertText', false, '\(escapedText)')" in document 1
-            end tell
-            """
-            logInfo("Safari insert text script: \(script)")
-            return (script, nil, "Safari insert text result")
-
-        case .selectAllText:
-            let script = """
-            tell application id "\(bundleID)"
-                do JavaScript "
-                    \(getSelectAllInputTextScript())
-                " in document 1
-            end tell
-            """
-            return (script, nil, "Safari select all text result")
         }
     }
 
-    private class func getTextFieldTextScript() -> String {
-        """
-        (function() {
-            var el = document.activeElement;
-            if (!el) return '';
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                return el.value;
-            }
-            if (el.isContentEditable) {
-                return el.innerText || el.textContent || '';
-            }
-            return '';
-        })();
-        """
-    }
-
     /// Modern implementation for selecting all text in the focused element
-    private class func getSelectAllInputTextScript() -> String {
-        """
-        (function() {
-            const activeElement = document.activeElement;
-
-            if (!activeElement) {
-                console.log('No active element found');
-                return false;
-            }
-
-            // For input and textarea elements
-            if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
-                activeElement.select();
-                return true;
-            }
-
-            // For contentEditable elements
-            if (activeElement.isContentEditable) {
-                const range = document.createRange();
-                range.selectNodeContents(activeElement);
-
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                return true;
-            }
-
-            console.log('Active element is neither input, textarea, nor contentEditable');
-            return false;
-        })();
-        """
-    }
-
     /// Escape JavaScript string to prevent injection and handle special characters.
     /// The JavaScript code is inside AppleScript's double-quoted string, and JS string uses single quotes.
     /// AppleScript requires backslash to be escaped as \\, and for JS single quote we need \'
@@ -261,14 +122,6 @@ extension AppleScriptTask {
     /// - Example:
     ///   - Original string: `\` This is a special character.\n" test"\n"\\" Hello.
     ///   - After escaping: `\\\\` This is a special character.\\n\"test\"\\n\"\\\\\\\\\" Hello.
-    private class func escapeJavaScriptString(_ string: String) -> String {
-        string
-            .replacing("\\", with: "\\\\\\\\") // Escape backslash: \
-            .replacing("'", with: "\\\\'") // Escape single quote: '
-            .replacing("\"", with: "\\\"") // Escape double quote: "
-            .replacing("\n", with: "\\\\n") // Escape new line: \n
-    }
-
     // MARK: - Static Data
 
     private static let chromeKernelBrowsers = [

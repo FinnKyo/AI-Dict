@@ -6,15 +6,13 @@
 //  Copyright © 2024 izual. All rights reserved.
 //
 
-import Defaults
 import Foundation
 import SystemConfiguration
 
 // MARK: - DetectManager
 
 /// Manager for text detection and OCR functionality.
-/// Coordinates multiple detection services (Apple, Google, Baidu, Youdao) to provide
-/// accurate language detection and optical character recognition.
+/// Uses Apple's on-device language detection and Vision OCR.
 @objc(EZDetectManager)
 @objcMembers
 public final class DetectManager: NSObject {
@@ -41,13 +39,9 @@ public final class DetectManager: NSObject {
     /// The query model containing text and image data to be processed.
     public var queryModel: QueryModel
 
-    /// The OCR service used for text recognition (defaults to AppleService).
+    /// The OCR service used for text recognition.
     public var ocrService: QueryService {
-        let identifier = Defaults[.ocrServiceID]
-        if let service = Self.selectedOCRService(identifier) {
-            return service
-        }
-        return AppleService.shared
+        AppleService.shared
     }
 
     // MARK: - Static Factory
@@ -80,8 +74,7 @@ public final class DetectManager: NSObject {
         ocrAndDetectText(using: ocrService, progress: progress, completion: completion)
     }
 
-    /// Detects the language of the given text using Apple, Google, and/or Baidu services
-    /// based on the configured language detection optimization setting.
+    /// Detects the language of the given text with Apple's on-device detector.
     /// - Parameters:
     ///   - queryText: The text to detect the language of.
     ///   - completion: Callback with the updated query model and optional error.
@@ -103,52 +96,12 @@ public final class DetectManager: NSObject {
                 return
             }
 
-            var preferredLanguages = EZLanguageManager.shared().preferredLanguages
-
-            // Add English and Chinese to the preferred language list.
-            // System detect for English and Chinese is relatively accurate,
-            // so we don't need to use Google or Baidu to detect again.
-            preferredLanguages.append(contentsOf: [
-                .english,
-                .simplifiedChinese,
-                .traditionalChinese,
-            ])
-
-            let isPreferredLanguage = preferredLanguages.contains(appleDetectedLanguage)
-
-            let languageDetectOptimize = MyConfiguration.shared.languageDetectOptimize
-
-            // If the detected language is preferred or optimization is disabled, use Apple's result.
-            if isPreferredLanguage || languageDetectOptimize == .none {
-                handleDetectedLanguage(
-                    appleDetectedLanguage,
-                    queryText: queryText,
-                    error: error,
-                    completion: completion
-                )
-                return
-            }
-
-            // Otherwise, use configured optimization service (Baidu or Google).
-            if languageDetectOptimize == .baidu {
-                baiduDetect(
-                    queryText: queryText,
-                    fallbackLanguage: appleDetectedLanguage,
-                    fallbackError: error,
-                    completion: completion
-                )
-                return
-            }
-
-            if languageDetectOptimize == .google {
-                googleDetect(
-                    queryText: queryText,
-                    fallbackLanguage: appleDetectedLanguage,
-                    fallbackError: error,
-                    completion: completion
-                )
-                return
-            }
+            handleDetectedLanguage(
+                appleDetectedLanguage,
+                queryText: queryText,
+                error: error,
+                completion: completion
+            )
         }
     }
 
@@ -173,10 +126,6 @@ public final class DetectManager: NSObject {
     }
 
     // MARK: Internal
-
-    @nonobjc static var ocrServiceIDs: [String] {
-        configuredServiceIDs.filter { makeOCRService($0) != nil }.sorted()
-    }
 
     @nonobjc
     func ocrAndDetectText(
@@ -251,11 +200,6 @@ public final class DetectManager: NSObject {
 
     // MARK: Private
 
-    private static var configuredServiceIDs: Set<String> {
-        let storage = LocalStorage.shared()
-        return Set([EZWindowType.fixed, .main, .mini].flatMap { storage.allServiceTypes($0) })
-    }
-
     // MARK: - Private Properties
 
     private var latestOCRRequestID: UUID?
@@ -264,24 +208,6 @@ public final class DetectManager: NSObject {
     private var allowsDetachedDetection = false
 
     private lazy var appleService: AppleService = .shared
-
-    private lazy var googleService: GoogleService = .init()
-
-    private lazy var baiduService: BaiduService = .init()
-
-    private lazy var youdaoService: YoudaoService = .init()
-
-    private static func makeOCRService(_ identifier: String) -> QueryService? {
-        guard identifier != ServiceType.apple.rawValue,
-              let service = QueryServiceFactory.shared.service(withTypeId: identifier),
-              service.supportsOCR() else { return nil }
-        return service
-    }
-
-    private static func selectedOCRService(_ identifier: String) -> QueryService? {
-        guard identifier != ServiceType.apple.rawValue, configuredServiceIDs.contains(identifier) else { return nil }
-        return makeOCRService(identifier)
-    }
 
     @discardableResult
     private func performOCR(
@@ -430,8 +356,7 @@ public final class DetectManager: NSObject {
         completion(queryModel, error)
     }
 
-    /// Handles the OCR result, falling back to Youdao OCR if Apple OCR fails and
-    /// Youdao OCR is enabled in settings.
+    /// Handles the OCR result.
     /// - Parameters:
     ///   - ocrResult: The OCR result from the primary service.
     ///   - error: Optional error from the primary OCR service.
@@ -446,107 +371,7 @@ public final class DetectManager: NSObject {
             return
         }
 
-        /**
-         Sometimes Apple OCR may fail, such as with Japanese text.
-         If we have set Japanese as the preferred language and OCR again when the
-         OCR result is empty, it seems to work currently, but we don't guarantee
-         it will always work in other languages.
-         */
-
-        guard MyConfiguration.shared.enableYoudaoOCR else {
-            completion(ocrResult, error)
-            return
-        }
-
-        Task {
-            do {
-                let result = try await youdaoService.ocr(queryModel)
-                await MainActor.run {
-                    completion(result, nil)
-                }
-            } catch {
-                await MainActor.run {
-                    completion(ocrResult, error)
-                }
-            }
-        }
-    }
-
-    /// Detects language using Baidu's service as a fallback.
-    /// - Parameters:
-    ///   - queryText: The text to detect.
-    ///   - fallbackLanguage: The language to use if Baidu detection fails.
-    ///   - fallbackError: The error from the previous detection attempt.
-    ///   - completion: Callback to invoke with the updated query model and error.
-    private func baiduDetect(
-        queryText: String,
-        fallbackLanguage: Language,
-        fallbackError: Error?,
-        completion: @escaping (QueryModel, Error?) -> ()
-    ) {
-        baiduService.detectText(queryText) { [weak self] language, error in
-            guard let self else {
-                completion(QueryModel(), error)
-                return
-            }
-
-            let detectedLanguage = error == nil ? language : fallbackLanguage
-
-            if error == nil {
-                logInfo("Baidu detected: \(language)")
-            } else {
-                logError("Baidu detect error: \(error?.localizedDescription ?? "unknown")")
-            }
-
-            handleDetectedLanguage(
-                detectedLanguage,
-                queryText: queryText,
-                error: error ?? fallbackError,
-                completion: completion
-            )
-        }
-    }
-
-    /// Detects language using Google's service as a primary fallback,
-    /// then Baidu's service if Google fails.
-    /// - Parameters:
-    ///   - queryText: The text to detect.
-    ///   - fallbackLanguage: The language to use if all detection attempts fail.
-    ///   - fallbackError: The error from the previous detection attempt.
-    ///   - completion: Callback to invoke with the updated query model and error.
-    private func googleDetect(
-        queryText: String,
-        fallbackLanguage: Language,
-        fallbackError: Error?,
-        completion: @escaping (QueryModel, Error?) -> ()
-    ) {
-        googleService.detectText(queryText) { [weak self] language, error in
-            guard let self else {
-                completion(QueryModel(), error)
-                return
-            }
-
-            if error == nil {
-                logInfo("Google detected: \(language)")
-                handleDetectedLanguage(
-                    language,
-                    queryText: queryText,
-                    error: nil,
-                    completion: completion
-                )
-                return
-            }
-
-            logError("Google detect error: \(error?.localizedDescription ?? "unknown")")
-
-            // If Google detection failed, use Baidu detection.
-            baiduDetect(
-                queryText: queryText,
-                fallbackLanguage: fallbackLanguage,
-                fallbackError: fallbackError,
-                completion: completion
-            )
-        }
+        completion(ocrResult, error)
     }
 }
 

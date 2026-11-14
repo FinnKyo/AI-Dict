@@ -339,21 +339,6 @@ static EZLanguageManager *_instance;
     return _languagesWithoutWordSpaces;
 }
 
-- (BOOL)isShortWordLength:(NSString *)word language:(EZLanguage)language {
-    BOOL isShortWordLength;
-    NSInteger wordLength = word.length;
-    BOOL isNeedSpaceLanguage = [EZLanguageManager.shared isLanguageWordsNeedSpace:language];
-    
-    if (isNeedSpaceLanguage) {
-        isShortWordLength = wordLength <= EZEnglishWordMaxLength;
-    } else {
-        isShortWordLength = wordLength <= 7;
-    }
-    isShortWordLength = wordLength && isShortWordLength;
-    
-    return isShortWordLength;
-}
-
 #pragma mark -
 
 - (NSArray<EZLanguage> *)allLanguages {

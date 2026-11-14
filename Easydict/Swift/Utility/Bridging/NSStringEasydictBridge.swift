@@ -43,23 +43,6 @@ final class NSStringEasydictBridge: NSObject {
         (string as String).isSpelledCorrectly(language: language)
     }
 
-    static func shouldQueryDictionary(
-        _ string: NSString,
-        languageIdentifier: NSString?,
-        maxWordCount: Int
-    )
-        -> Bool {
-        let language = makeLanguage(from: languageIdentifier)
-        return (string as String).shouldQueryDictionary(
-            withLanguage: language, maxWordCount: maxWordCount
-        )
-    }
-
-    static func shouldQuerySentence(_ string: NSString, languageIdentifier: NSString?) -> Bool {
-        let language = makeLanguage(from: languageIdentifier)
-        return (string as String).shouldQuerySentence(withLanguage: language)
-    }
-
     // MARK: Private
 
     private static func makeLanguage(from identifier: NSString?) -> Language {

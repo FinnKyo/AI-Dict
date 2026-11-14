@@ -62,8 +62,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Such as English, French, etc. where words are separated by spaces.
 - (BOOL)isLanguageWordsNeedSpace:(EZLanguage)language;
 
-- (BOOL)isShortWordLength:(NSString *)word language:(EZLanguage)language;
-
 #pragma mark -
 
 /// Showing language name according user preferred language, Chinese: English -> 英语, English: English -> English.

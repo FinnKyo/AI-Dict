@@ -62,10 +62,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Cancel the pending auto-query-while-typing debounce.
 - (void)cancelAutoQuery;
 
-- (void)stopPlayingQueryText;
-- (void)togglePlayQueryText;
-- (void)togglePlayQueryText:(BOOL)playFlag;
-
 /// Detect query text, and update select language cell.
 - (void)detectQueryText:(nullable void (^)(NSString *language))completion;
 
@@ -76,14 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateCellWithResult:(EZQueryResult *)result reloadData:(BOOL)reloadData;
 
-- (void)disableReplaceTextButton;
-
-- (void)receiveTitlebarAction:(EZTitlebarQuickAction)action;
 
 - (void)updateActionType:(EZActionType)actionType;
-
-/// Discard cached dictionary WebViews when the query window has been idle.
-- (void)discardDictionaryWebViews;
 
 @end
 

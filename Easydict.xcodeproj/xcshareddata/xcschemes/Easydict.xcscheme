@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C99EEB172385796700FEE666"
-               BuildableName = "Easydict.app"
+               BuildableName = "AI-Dict.app"
                BlueprintName = "Easydict"
                ReferencedContainer = "container:Easydict.xcodeproj">
             </BuildableReference>
@@ -66,7 +66,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C99EEB172385796700FEE666"
-            BuildableName = "Easydict.app"
+            BuildableName = "AI-Dict.app"
             BlueprintName = "Easydict"
             ReferencedContainer = "container:Easydict.xcodeproj">
          </BuildableReference>
@@ -107,7 +107,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C99EEB172385796700FEE666"
-            BuildableName = "Easydict.app"
+            BuildableName = "AI-Dict.app"
             BlueprintName = "Easydict"
             ReferencedContainer = "container:Easydict.xcodeproj">
          </BuildableReference>

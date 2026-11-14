@@ -9,7 +9,10 @@
 #import "AppDelegate+EZURLScheme.h"
 #import <JLRoutes.h>
 #import "EZWindowManager.h"
-#import "EZSchemeParser.h"
+
+/// URL scheme of the app, e.g. aidict://query?text=good
+static NSString *const EZAppScheme = @"aidict";
+static NSString *const EZQueryKey = @"query";
 
 @implementation AppDelegate (EZURLScheme)
 
@@ -28,11 +31,11 @@
         NSURL *URL = parameters[JLRouteURLKey];
 
         /**
-         Recommend use easydict://query?text=xxx, easydict://xxx is a bit ambiguous and complex.
+         Recommend use aidict://query?text=xxx, aidict://xxx is a bit ambiguous and complex.
 
-         easydict://good
-         easydict://query?text=good
-         easydict://good%2Fgirl  (easydict://good/girl)
+         aidict://good
+         aidict://query?text=good
+         aidict://good%2Fgirl  (aidict://good/girl)
          */
         if (!([action isEqualToString:EZQueryKey] && queryText.length)) {
             // Ukraine may get another Patriot battery.
@@ -77,7 +80,7 @@
                                actionType:EZActionTypeInvokeQuery];
 }
 
-/// Get query text from URL scheme, easydict://good%2Fgirl --> good%2Fgirl
+/// Get query text from URL scheme, aidict://good%2Fgirl --> good%2Fgirl
 - (NSString *)extractQueryTextFromURL:(NSURL *)URL {
     NSString *queryText = [URL.resourceSpecifier stringByReplacingOccurrencesOfString:@"//" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, 2)];
     return [queryText ns_decode];
@@ -101,12 +104,12 @@
      We need to encode some special characters, such as '&'.
      Fix: https://github.com/tisfeng/Easydict/issues/761
 
-     easydict://query?text=Agent Mode & Auto Context
+     aidict://query?text=Agent Mode & Auto Context
 
      */
     NSURL *URL = [NSURL URLWithString:[urlString ns_encodeIncludingAmpersandSafely]];
 
-    // easydict://query?text=good, easydict://query?text=你好
+    // aidict://query?text=good, aidict://query?text=你好
     if ([URL.scheme containsString:EZAppScheme]) {
         MMLogInfo(@"handle URL: %@", URL);
     }

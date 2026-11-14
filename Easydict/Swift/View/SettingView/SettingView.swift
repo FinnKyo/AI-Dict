@@ -16,8 +16,6 @@ enum SettingTab: Int {
     case disabled
     case advanced
     case shortcut
-    case privacy
-    case favorites
     case about
 }
 
@@ -36,10 +34,6 @@ struct SettingView: View {
                 .tabItem { Label("service", systemImage: "briefcase") }
                 .tag(SettingTab.service)
 
-            FavoritesTab()
-                .tabItem { Label("favorites.tab", systemImage: "star") }
-                .tag(SettingTab.favorites)
-
             DisabledAppTab()
                 .tabItem { Label("disabled_app_list", systemImage: "nosign") }
                 .tag(SettingTab.disabled)
@@ -51,10 +45,6 @@ struct SettingView: View {
             AdvancedTab()
                 .tabItem { Label("advanced", systemImage: "gearshape.2") }
                 .tag(SettingTab.advanced)
-
-            PrivacyTab()
-                .tabItem { Label("privacy", systemImage: "hand.raised.square") }
-                .tag(SettingTab.privacy)
 
             AboutTab()
                 .tabItem { Label("setting.about", systemImage: "info.bubble") }
@@ -81,12 +71,8 @@ struct SettingView: View {
         let height: Double = switch selection {
         case .disabled:
             500
-        case .privacy:
-            340
         case .about:
             300
-        case .favorites:
-            640
         default:
             defaultSettingsWindowHeight
         }

@@ -21,53 +21,6 @@ extension MyConfiguration {
     }
 }
 
-// MARK: Intelligent Query Text Type of Service
-
-extension MyConfiguration {
-    func setIntelligentQueryTextType(_ queryTextType: EZQueryTextType, serviceType: ServiceType) {
-        Defaults[.intelligentQueryTextType(for: serviceType)] = queryTextType
-    }
-
-    func intelligentQueryTextTypeForServiceType(_ serviceType: ServiceType) -> EZQueryTextType {
-        Defaults[.intelligentQueryTextType(for: serviceType)]
-    }
-}
-
-// MARK: Intelligent Query Text Type of Service
-
-extension MyConfiguration {
-    func setQueryTextType(_ queryTextType: EZQueryTextType, serviceType: ServiceType) {
-        Defaults[.queryTextType(for: serviceType)] = queryTextType
-    }
-
-    func queryTextTypeForServiceType(_ serviceType: ServiceType) -> EZQueryTextType {
-        Defaults[.queryTextType(for: serviceType)]
-    }
-}
-
-// MARK: Intelligent Query Mode
-
-extension MyConfiguration {
-    func setIntelligentQueryMode(_ enabled: Bool, windowType: EZWindowType) {
-        let key = EZConstKey.constkey("IntelligentQueryMode", windowType: windowType)
-        let stringValue = "\(enabled)"
-        UserDefaults.standard.set(stringValue, forKey: key)
-
-        let parameters =
-            [
-                "enabled": enabled,
-                "window_type": windowType.rawValue,
-            ] as [String: Any]
-
-        AnalyticsService.logEvent(withName: "intelligent_query_mode", parameters: parameters)
-    }
-
-    func intelligentQueryModeForWindowType(_ windowType: EZWindowType) -> Bool {
-        let key = EZConstKey.constkey("IntelligentQueryMode", windowType: windowType)
-        return UserDefaults.standard.bool(forKey: key)
-    }
-}
-
 // MARK: Window Configuration
 
 extension MyConfiguration {

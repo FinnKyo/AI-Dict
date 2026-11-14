@@ -22,8 +22,6 @@ public enum ShortcutAction: String, Identifiable, CaseIterable {
     case toggleAutoSelectText
     case showMiniWindow
     case pasteboardTranslate
-    case polishAndReplace
-    case translateAndReplace
     case silentScreenshotOCR
 
     // OCR specific shortcuts
@@ -37,16 +35,12 @@ public enum ShortcutAction: String, Identifiable, CaseIterable {
     case copy
     case copyFirstResult
     case focus
-    case play
     case retry
     case toggle
     case pin
     case hide
     case increaseFontSize
     case decreaseFontSize
-    case google
-    case eudic
-    case appleDic
 
     // MARK: Public
 
@@ -62,8 +56,6 @@ extension ShortcutAction {
         .toggleAutoSelectText,
         .showMiniWindow,
         .pasteboardTranslate,
-        .polishAndReplace,
-        .translateAndReplace,
         .silentScreenshotOCR,
         .screenshotOCR,
         .pasteboardOCR,
@@ -167,18 +159,6 @@ extension ShortcutAction {
                 defaultsKey: .pasteboardTranslateShortcut,
                 action: { windowManager.pasteboardTranslate(.fixed) }
             ),
-            .polishAndReplace: .init(
-                titleKey: "menu_polish_and_replace",
-                icon: .wandAndStars,
-                defaultsKey: .polishAndReplaceShortcut,
-                action: { await ActionManager.shared.polishAndReplace() }
-            ),
-            .translateAndReplace: .init(
-                titleKey: "menu_translate_and_replace",
-                icon: .arrowLeftArrowRightSquare,
-                defaultsKey: .translateAndReplaceShortcut,
-                action: { await ActionManager.shared.translateAndReplace() }
-            ),
             .showMiniWindow: .init(
                 titleKey: "menu_show_mini_window",
                 icon: .dockRectangle,
@@ -237,12 +217,6 @@ extension ShortcutAction {
                 defaultsKey: .focusShortcut,
                 action: { windowManager.focusInputTextView() }
             ),
-            .play: .init(
-                titleKey: "shortcut_play",
-                icon: .playFill,
-                defaultsKey: .playShortcut,
-                action: { windowManager.playOrStopQueryTextAudio() }
-            ),
             .retry: .init(
                 titleKey: "retry",
                 icon: .arrowClockwise,
@@ -285,33 +259,6 @@ extension ShortcutAction {
                     if MyConfiguration.shared.fontSizeIndex > 0 {
                         MyConfiguration.shared.fontSizeIndex -= 1
                     }
-                }
-            ),
-            .google: .init(
-                titleKey: "open_in_google",
-                icon: .magnifyingglass,
-                defaultsKey: .googleShortcut,
-                action: {
-                    let window = windowManager.floatingWindow
-                    window?.titleBar.googleButton.openLink()
-                }
-            ),
-            .eudic: .init(
-                titleKey: "open_in_eudic",
-                icon: .bookClosed,
-                defaultsKey: .eudicShortcut,
-                action: {
-                    let window = windowManager.floatingWindow
-                    window?.titleBar.eudicButton.openLink()
-                }
-            ),
-            .appleDic: .init(
-                titleKey: "open_in_apple_dictionary",
-                icon: .book,
-                defaultsKey: .appleDictionaryShortcut,
-                action: {
-                    let window = windowManager.floatingWindow
-                    window?.titleBar.appleDictionaryButton.openLink()
                 }
             ),
         ]

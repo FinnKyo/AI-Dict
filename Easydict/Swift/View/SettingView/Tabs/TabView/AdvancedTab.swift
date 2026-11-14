@@ -22,67 +22,6 @@ struct AdvancedTab: View {
 
     var body: some View {
         Form {
-            Section {
-                Toggle(isOn: $enableBetaFeature) {
-                    AdvancedTabItemView(
-                        color: .blue,
-                        icon: .hammerFill,
-                        labelText: "setting.advance.enable_beta_feature"
-                    )
-                }
-            }
-
-            // Items image color order: blue, green, orange, purple, red, mint, yellow, cyan, indigo
-
-            // General settings section
-            Section {
-                Picker(
-                    selection: $defaultTTSServiceType,
-                    label: AdvancedTabItemView(
-                        color: .blue,
-                        icon: .ellipsisBubbleFill,
-                        labelText: "setting.advance.default_tts_service"
-                    )
-                ) {
-                    ForEach(TTSServiceType.allCases, id: \.rawValue) { option in
-                        Text(option.localizedStringResource)
-                            .tag(option)
-                    }
-                }
-                Toggle(isOn: $preferYoudaoTTSForEnglishWord) {
-                    AdvancedTabItemView(
-                        color: .indigo,
-                        icon: .waveform,
-                        labelText: "setting.advance.prefer_youdao_tts_for_english_word",
-                        subtitleText: "setting.advance.prefer_youdao_tts_for_english_word_desc"
-                    )
-                }
-                LabeledContent {
-                    TextField(
-                        text: $minClassicalChineseTextDetectLength,
-                        prompt: Text(verbatim: "\(AppConstants.minClassicalChineseLength)")
-                    ) {
-                        EmptyView()
-                    }
-                    .frame(width: 100)
-                    .fixedSize(horizontal: true, vertical: false)
-                    .onChange(of: minClassicalChineseTextDetectLength) { newValue in
-                        minClassicalChineseTextDetectLength = newValue.filter { $0.isNumber }
-                        logInfo(
-                            "Min classical Chinese text detect length: \(minClassicalChineseTextDetectLength)"
-                        )
-                    }
-                } label: {
-                    AdvancedTabItemView(
-                        color: .purple,
-                        icon: .book,
-                        labelText: "setting.advance.min_classical_chinese_text_detect_length"
-                    )
-                }
-            } header: {
-                Text("setting.advance.header.general_settings")
-            }
-
             // Mouse query icon
             Section {
                 let minLengthBinding = Binding<Double>(
@@ -180,22 +119,6 @@ struct AdvancedTab: View {
                         subtitleText: "setting.advance.prefer_applescript_api_desc"
                     )
                 }
-                Toggle(isOn: $enableCompatibilityReplace) {
-                    AdvancedTabItemView(
-                        color: .purple,
-                        icon: .arrowForwardSquare,
-                        labelText: "setting.advance.enable_compatibility_replace",
-                        subtitleText: "setting.advance.enable_compatibility_replace_desc"
-                    )
-                }
-                Toggle(isOn: $autoSelectAllTextFieldText) {
-                    AdvancedTabItemView(
-                        color: .red,
-                        icon: .checkmarkSquare,
-                        labelText: "setting.advance.auto_select_all_text_field_text",
-                        subtitleText: "setting.advance.auto_select_all_text_field_text_desc"
-                    )
-                }
                 Toggle(isOn: $enableRemoveBooksExcerptInfo) {
                     AdvancedTabItemView(
                         color: .mint,
@@ -245,30 +168,6 @@ struct AdvancedTab: View {
 
             // OCR settings section
             Section {
-                Picker("setting.advance.ocr_service", selection: $ocrServiceID) {
-                    Text("setting.advance.ocr_service.apple").tag(ServiceType.apple.rawValue)
-                    ForEach(DetectManager.ocrServiceIDs, id: \.self) { identifier in
-                        if let metadata = QueryServiceFactory.shared.metadata(withTypeId: identifier) {
-                            Text(metadata.title).tag(identifier)
-                        }
-                    }
-                }
-                Text("setting.advance.ocr_service.description")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .onAppear {
-                        if !DetectManager.ocrServiceIDs.contains(ocrServiceID) {
-                            ocrServiceID = ServiceType.apple.rawValue
-                        }
-                    }
-                Toggle(isOn: $enableYoudaoOCR) {
-                    AdvancedTabItemView(
-                        color: .blue,
-                        icon: .circleRectangleFilledPatternDiagonalline,
-                        labelText: "setting.advance.enable_youdao_ocr",
-                        subtitleText: "setting.advance.enable_youdao_ocr_desc"
-                    )
-                }
                 Toggle(isOn: $enableOCRTextNormalization) {
                     AdvancedTabItemView(
                         color: .green,
@@ -397,73 +296,8 @@ struct AdvancedTab: View {
                 Text("setting.advance.window_management.header")
             }
 
-            // HTTP server
-            Section {
-                Toggle(isOn: $enableHTTPServer) {
-                    AdvancedTabItemView(
-                        color: getHttpIconColor(),
-                        icon: .network,
-                        labelText: "setting.advance.enable_http_server"
-                    )
-                }
-
-                LabeledContent {
-                    TextField(text: $httpPort, prompt: Text(verbatim: "8080")) {
-                        EmptyView()
-                    }
-                    .frame(width: 100)
-                    .fixedSize(horizontal: true, vertical: false)
-                    // Add onChange modifier to filter input
-                    .onChange(of: httpPort) { newValue in
-                        httpPort = newValue.filter { $0.isNumber }
-                    }
-                } label: {
-                    AdvancedTabItemView(
-                        color: getHttpIconColor(),
-                        icon: .externaldriveConnectedToLineBelow,
-                        labelText: "setting.advance.http_port",
-                        subtitleText: "setting.advance.http_port_desc"
-                    )
-                }
-            } header: {
-                Text("setting.advance.header.http_server")
-            }
-
-            AdvancedTabAnkiSection()
-            // Vocabulary notebook
-            Section {
-                Toggle(isOn: $enableVocabularyNotebook) {
-                    AdvancedTabItemView(
-                        color: .brown,
-                        icon: .bookClosed,
-                        labelText: "setting.advance.vocabulary_notebook",
-                        subtitleText: "setting.advance.vocabulary_notebook_desc"
-                    )
-                }
-
-                LabeledContent {
-                    HStack(spacing: 8) {
-                        Text(displayedVocabularyNotebookDirectory)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-
-                        Button {
-                            chooseVocabularyNotebookDirectory()
-                        } label: {
-                            Text("setting.advance.vocabulary_notebook_choose_directory")
-                        }
-                    }
-                } label: {
-                    AdvancedTabItemView(
-                        color: .brown,
-                        icon: .folderFill,
-                        labelText: "setting.advance.vocabulary_notebook_directory"
-                    )
-                }
-                .disabled(!enableVocabularyNotebook)
-            } header: {
-                Text("setting.advance.header.vocabulary_notebook")
+            ForEach([EZWindowType.mini, .fixed, .main], id: \.rawValue) { windowType in
+                WindowConfigurationView(windowType: windowType)
             }
         }
         .formStyle(.grouped)
@@ -471,18 +305,9 @@ struct AdvancedTab: View {
 
     // MARK: Private
 
-    @Default(.enableBetaFeature) private var enableBetaFeature
-
-    @Default(.defaultTTSServiceType) private var defaultTTSServiceType
-    @Default(.preferYoudaoTTSForEnglishWord) private var preferYoudaoTTSForEnglishWord
-    @Default(.ocrServiceID) private var ocrServiceID
-    @Default(.enableYoudaoOCR) private var enableYoudaoOCR
-    @Default(.enableCompatibilityReplace) private var enableCompatibilityReplace
-    @Default(.minClassicalChineseTextDetectLength) private var minClassicalChineseTextDetectLength
     @Default(.enableOCRTextNormalization) private var enableOCRTextNormalization
     @Default(.showOCRMenuItems) private var showOCRMenuItems
     @Default(.isScreenshotTipLayerHidden) private var isScreenshotTipLayerHidden
-    @Default(.autoSelectAllTextFieldText) private var autoSelectAllTextFieldText
     @Default(.preferAppleScriptAPI) private var preferAppleScriptAPI
 
     // Force get selected text
@@ -506,52 +331,7 @@ struct AdvancedTab: View {
     @Default(.pinWindowWhenDisplayed) private var pinWindowWhenDisplayed
     @Default(.hideMainWindow) private var hideMainWindow
 
-    @Default(.enableHTTPServer) private var enableHTTPServer
-    @Default(.httpPort) private var httpPort
-
-    @Default(.enableVocabularyNotebook) private var enableVocabularyNotebook
-    @Default(.vocabularyNotebookDirectory) private var vocabularyNotebookDirectory
-
     @Default(.maxWindowHeightPercentage) private var maxWindowHeightPercentageValue
-
-    /// The directory path shown in the picker row, or a placeholder when unset.
-    private var displayedVocabularyNotebookDirectory: String {
-        vocabularyNotebookDirectory.isEmpty
-            ? String(localized: "setting.advance.vocabulary_notebook_directory_placeholder")
-            : vocabularyNotebookDirectory
-    }
-
-    /// Returns Color.green if `enableHTTPServer` is true, returns Color.red otherwise.
-    private func getHttpIconColor() -> Color {
-        enableHTTPServer ? .green : .red
-    }
-
-    /// Presents an `NSOpenPanel` for choosing the vocabulary notebook directory.
-    private func chooseVocabularyNotebookDirectory() {
-        let panel = NSOpenPanel()
-        panel.canChooseDirectories = true
-        panel.canChooseFiles = false
-        panel.allowsMultipleSelection = false
-        panel.canCreateDirectories = true
-        panel.prompt = String(localized: "setting.advance.vocabulary_notebook_choose_directory")
-
-        guard panel.runModal() == .OK, let url = panel.url else {
-            return
-        }
-
-        let directory = url.path
-        guard FileManager.default.isWritableFile(atPath: directory) else {
-            let alert = NSAlert()
-            alert.messageText = String(
-                localized: "setting.advance.vocabulary_notebook_directory_not_writable"
-            )
-            alert.addButton(withTitle: String(localized: "ok"))
-            alert.runModal()
-            return
-        }
-
-        vocabularyNotebookDirectory = directory
-    }
 }
 
 #Preview {

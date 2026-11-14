@@ -10,150 +10,6 @@ import CoreGraphics
 import Defaults
 import Foundation
 
-/// Converts a part-of-speech string to its abbreviated form.
-private func partAbbreviation(_ part: String) -> String {
-    guard !part.isEmpty else {
-        return ""
-    }
-
-    let partOfSpeechMap: [(String, [String])] = [
-        ("adj.", ["adjective", "形容词"]),
-        ("adv.", ["adverb", "副词"]),
-        ("v.", ["verb", "动词"]),
-        ("linkv.", ["linkv", "linking verb", "系动词"]),
-        ("auxv.", ["auxv", "auxiliary verb", "助动词"]),
-        ("modalv.", ["modalv", "modal verb", "情态动词"]),
-        ("n.", ["noun", "名词"]),
-        ("pron.", ["pronoun", "代词"]),
-        ("prep.", ["preposition", "介词"]),
-        ("conj.", ["conjunction", "连词"]),
-        ("int.", ["int", "感叹词"]),
-        ("interj.", ["interjection", "感叹词"]),
-        ("det.", ["determinative", "限定词"]),
-        ("art.", ["article", "冠词"]),
-        ("abbr.", ["abbreviation", "缩写"]),
-        ("inf.", ["infinitive", "不定词"]),
-        ("part.", ["participle", "分词"]),
-        ("num.", ["numeral", "数词"]),
-        ("Web", ["Web", "网络"]),
-    ]
-
-    for (abbreviation, values) in partOfSpeechMap {
-        if values.contains(part) {
-            return abbreviation
-        }
-
-        if values.contains(where: { $0.hasPrefix(part) }) {
-            return abbreviation
-        }
-    }
-
-    if part.isEnglishWord {
-        return "\(part)."
-    }
-
-    return part
-}
-
-// MARK: - EZWordPhonetic
-
-/// Represents a phonetic item for a dictionary word.
-@objcMembers
-class EZWordPhonetic: NSObject {
-    var word: String = ""
-    var language: Language = .auto
-    var value: String?
-    var speakURL: String?
-    var name: String?
-    var accent: String?
-}
-
-// MARK: - EZTranslatePart
-
-/// Represents a grouped translation item by part of speech.
-@objcMembers
-class EZTranslatePart: NSObject {
-    // MARK: Internal
-
-    var means: [String] = []
-
-    var part: String? {
-        get { storedPart }
-        set { storedPart = newValue.map(partAbbreviation) ?? newValue }
-    }
-
-    // MARK: Private
-
-    private var storedPart: String?
-}
-
-// MARK: - EZTranslateExchange
-
-/// Represents a word form exchange entry.
-@objcMembers
-class EZTranslateExchange: NSObject {
-    var name: String = ""
-    var words: [String] = []
-}
-
-// MARK: - EZTranslateSimpleWord
-
-/// Represents a simple dictionary entry for a word or phrase.
-@objcMembers
-class EZTranslateSimpleWord: NSObject {
-    // MARK: Internal
-
-    var word: String = ""
-
-    var part: String? {
-        get { storedPart }
-        set { storedPart = newValue.map(partAbbreviation) ?? newValue }
-    }
-
-    var means: [String]? {
-        didSet { cachedMeansText = nil }
-    }
-
-    var meansText: String {
-        if let cachedMeansText {
-            return cachedMeansText
-        }
-
-        let joinedText = means?.joined(separator: "; ") ?? ""
-        cachedMeansText = joinedText
-        return joinedText
-    }
-
-    var showPartMeans: Bool = false {
-        didSet {
-            guard showPartMeans else { return }
-            let pos = part?.isEmpty == false ? "\(part ?? "")  " : ""
-            cachedMeansText = "\(pos)\(meansText)"
-        }
-    }
-
-    // MARK: Private
-
-    private var storedPart: String?
-    private var cachedMeansText: String?
-}
-
-// MARK: - EZTranslateWordResult
-
-/// Contains detailed word translation data returned by dictionary services.
-@objcMembers
-class EZTranslateWordResult: NSObject {
-    var phonetics: [EZWordPhonetic]?
-    var parts: [EZTranslatePart]?
-    var exchanges: [EZTranslateExchange]?
-    var simpleWords: [EZTranslateSimpleWord]?
-    var tags: [String]?
-    var etymology: String?
-    var synonyms: [EZTranslatePart]?
-    var antonyms: [EZTranslatePart]?
-    var collocation: [EZTranslatePart]?
-}
-
 // MARK: - QueryResult
 
 /// Stores the translation or dictionary results for a query.
@@ -172,7 +28,7 @@ public class QueryResult: NSObject {
 
     var queryModel: QueryModel = .init()
 
-    var serviceTypeWithUniqueIdentifier: String = ServiceType.youdao.rawValue
+    var serviceTypeWithUniqueIdentifier: String = ServiceType.openRouter.rawValue
 
     var isShowing: Bool = false
     var viewHeight: CGFloat = 0
@@ -184,32 +40,14 @@ public class QueryResult: NSObject {
     var from: Language = .auto
     var to: Language = .auto
 
-    var wordResult: EZTranslateWordResult?
-
     var error: QueryError?
 
     var manualShow: Bool = false
-
-    var fromSpeakURL: String?
-    var toSpeakURL: String?
 
     @nonobjc var raw: Any?
 
     var promptTitle: String?
     var promptURL: String?
-
-    var showBigWord: Bool = false
-    var translateResultsTopInset: CGFloat = 0
-
-    var htmlString: String?
-    var htmlStrings: [String]?
-    var innerTexts: [String]?
-
-    var didFinishLoadingHTMLBlock: (@convention(block) () -> ())?
-
-    var webViewManager: EZWebViewManager = .init()
-
-    var showReplaceButton: Bool = false
 
     /// Optional message set during validation to provide extra context (e.g. streaming auto-disabled).
     var validationMessage: String?
@@ -246,11 +84,11 @@ public class QueryResult: NSObject {
     }
 
     var hasShowingResult: Bool {
-        hasTranslatedResult || error != nil || (htmlString?.isEmpty == false)
+        hasTranslatedResult || error != nil
     }
 
     var hasTranslatedResult: Bool {
-        wordResult != nil || translatedText != nil || (htmlString?.isEmpty == false)
+        translatedText != nil
     }
 
     var isWarningErrorType: Bool {
@@ -259,15 +97,7 @@ public class QueryResult: NSObject {
     }
 
     var copiedText: String? {
-        get {
-            guard htmlString?.isEmpty == false else {
-                return translatedText
-            }
-            return storedCopiedText
-        }
-        set {
-            storedCopiedText = newValue
-        }
+        translatedText
     }
 
     var queryFromLanguage: Language {
@@ -276,11 +106,6 @@ public class QueryResult: NSObject {
 
     var errorMessage: String? {
         error?.localizedDescription
-    }
-
-    /// Returns property names that should be ignored by MJExtension.
-    class func mj_ignoredPropertyNames() -> [String] {
-        []
     }
 
     /// Flips the Markdown rendering decision for this result, overriding the
@@ -293,32 +118,20 @@ public class QueryResult: NSObject {
     func reset() {
         queryModel = QueryModel()
         translatedResults = nil
-        wordResult = nil
         error = nil
         validationMessage = nil
-        serviceTypeWithUniqueIdentifier = ServiceType.youdao.rawValue
+        serviceTypeWithUniqueIdentifier = ServiceType.openRouter.rawValue
         isShowing = false
         isLoading = false
         viewHeight = 0
         queryText = ""
         from = .auto
         to = .auto
-        toSpeakURL = nil
-        fromSpeakURL = nil
         raw = nil
         promptTitle = nil
         promptURL = nil
-        showBigWord = false
-        translateResultsTopInset = 0
         isStreamFinished = true
         manualShow = false
-        htmlString = nil
-        htmlStrings = nil
-        innerTexts = nil
-        copiedText = nil
-        didFinishLoadingHTMLBlock = nil
-        webViewManager.reset()
-        showReplaceButton = false
         markdownRenderingOverride = nil
     }
 
@@ -331,5 +144,4 @@ public class QueryResult: NSObject {
 
     private let translatedResultsLock = NSLock()
     private var translatedResultsStorage: [String]?
-    private var storedCopiedText: String?
 }

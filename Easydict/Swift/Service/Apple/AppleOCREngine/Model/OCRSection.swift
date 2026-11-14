@@ -128,15 +128,6 @@ class OCRSection {
     /// The detected language for this section
     private(set) var detectedLanguage: Language = .auto
 
-    var genre: Genre = .plain {
-        didSet {
-            // If the genre is classical poetry, set the isPoetry flag to true.
-            if genre == .poetry {
-                isPoetry = true
-            }
-        }
-    }
-
     /// The average number of characters per line.
     var charCountPerLine: Double {
         totalCharCount.double / observations.count.double
@@ -275,8 +266,6 @@ class OCRSection {
         punctuationMarkCount = 0
         averageCharacterWidth = 0
         confidence = 0
-
-        genre = .plain
 
         // Reset section results
         mergedText = ""

@@ -8,43 +8,43 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         }
       }
@@ -56,43 +56,43 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict"
+            "value" : "AI-Dict"
           }
         }
       }
@@ -104,43 +104,43 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Easydict requires permission to execute AppleScript."
+            "value" : "AI-Dict requires permission to execute AppleScript."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict が AppleScript を実行するには権限が必要です。"
+            "value" : "AI-Dict が AppleScript を実行するには権限が必要です。"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict vyžaduje povolenie na vykonanie AppleScriptu."
+            "value" : "AI-Dict vyžaduje povolenie na vykonanie AppleScriptu."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict کو AppleScript چلانے کے لیے اجازت درکار ہے۔"
+            "value" : "AI-Dict کو AppleScript چلانے کے لیے اجازت درکار ہے۔"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict 需要权限来执行 AppleScript。"
+            "value" : "AI-Dict 需要权限来执行 AppleScript。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict 需要權限來執行 AppleScript。"
+            "value" : "AI-Dict 需要權限來執行 AppleScript。"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easydict requiere permiso para ejecutar AppleScript."
+            "value" : "AI-Dict requiere permiso para ejecutar AppleScript."
           }
         }
       }
@@ -152,43 +152,43 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Copyright © 2023-2025 tisfeng. All rights reserved."
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023-2025 tisfeng. All rights reserved."
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autorské práva © 2023-2025 tisfeng. Všetky práva vyhradené."
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023-2025 tisfeng. جملہ حقوق محفوظ ہیں۔"
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023-2025 tisfeng. 保留一切权利。"
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023-2025 tisfeng. 保留一切權利。"
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023-2025 tisfeng. Todos los derechos reservados."
+            "value" : "AI-Dict, based on Easydict © 2023-2025 tisfeng. GPL-3.0."
           }
         }
       }

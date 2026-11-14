@@ -92,37 +92,9 @@ open class QueryService: NSObject {
                 return false
             }
 
-            if MyConfiguration.shared.intelligentQueryModeForWindowType(windowType) {
-                let queryType = queryModel.queryText.queryType(
-                    withLanguage: queryModel.queryFromLanguage,
-                    maxWordCount: 1
-                )
-
-                return intelligentQueryTextType().contains(queryType)
-            }
-
             return true
         }
         set { storedEnabledAutoQuery = newValue }
-    }
-
-    open var audioPlayer: EZAudioPlayer! {
-        get {
-            if storedAudioPlayer == nil {
-                let player = EZAudioPlayer()
-                player.service = self
-                storedAudioPlayer = player
-            }
-            return storedAudioPlayer
-        }
-        set { storedAudioPlayer = newValue }
-    }
-
-    // MARK: - MJExtension
-
-    /// Avoid MJExtension retain cycle.
-    open class func mj_ignoredPropertyNames() -> [String] {
-        ["result"]
     }
 
     // MARK: - Public API
@@ -172,41 +144,14 @@ open class QueryService: NSObject {
         return (false, outcome.result)
     }
 
-    /// Get TTS language code.
-    /// - Parameters:
-    ///   - language: Text language.
-    ///   - accent: English accent, such as en-US, en-GB.
-    open func getTTSLanguageCode(_ language: Language, accent: String?) -> String {
-        var currentLanguage = language
-        if currentLanguage == .classicalChinese {
-            currentLanguage = .simplifiedChinese
-        }
-
-        return languageCode(forLanguage: currentLanguage) ?? ""
-    }
-
     @discardableResult
     open func resetServiceResult() -> QueryResult {
         updateResultLock.lock()
         defer { updateResultLock.unlock() }
         let currentResult = result ?? QueryResult()
-        storedAudioPlayer?.stop()
         // Invalidate any in-flight stream before reusing the same result object.
         resultGeneration += 1
         currentResult.reset()
-
-        let enabledReplaceTypes: [ActionType] = [
-            ActionType.autoSelectQuery,
-            ActionType.shortcutQuery,
-            ActionType.invokeQuery,
-        ]
-
-        let actionType = queryModel.actionType
-        if enabledReplaceTypes.contains(actionType) {
-            currentResult.showReplaceButton = EventMonitor.shared.isSelectedTextEditable
-        } else {
-            currentResult.showReplaceButton = false
-        }
 
         result = currentResult
         return currentResult
@@ -413,11 +358,7 @@ open class QueryService: NSObject {
     }
 
     open func supportedQueryType() -> EZQueryTextType {
-        [.translation, .sentence]
-    }
-
-    open func intelligentQueryTextType() -> EZQueryTextType {
-        [.translation, .sentence]
+        [.translation, .dictionary]
     }
 
     open func hasPrivateAPIKey() -> Bool {
@@ -426,10 +367,6 @@ open class QueryService: NSObject {
 
     open func apiKeyRequirement() -> ServiceAPIKeyRequirement {
         .userProvided
-    }
-
-    open func totalFreeQueryCharacterCount() -> Int {
-        100 * 10_000
     }
 
     open func isStream() -> Bool {
@@ -468,16 +405,6 @@ open class QueryService: NSObject {
                 }
             }
         }
-    }
-
-    /// Generate audio for the given text with an optional accent.
-    open func textToAudio(
-        _ text: String,
-        fromLanguage: Language,
-        accent: String? = nil
-    ) async throws
-        -> String? {
-        try await audioPlayer.defaultTTSService.textToAudio(text, fromLanguage: fromLanguage, accent: accent)
     }
 
     open func supportsOCR() -> Bool { false }
@@ -545,8 +472,6 @@ open class QueryService: NSObject {
     private var storedEnabledQuery: Bool = true
 
     private var storedEnabledAutoQuery: Bool = true
-
-    private var storedAudioPlayer: EZAudioPlayer?
 
     // MARK: - Language caches
 
@@ -696,20 +621,6 @@ extension QueryService {
 
         _ = fromLanguage
         _ = toLanguage
-
-        // Free quota check for services requiring private API key.
-        if apiKeyRequirement().needsUserProvidedKey,
-           !hasPrivateAPIKey(),
-           !LocalStorage.shared().hasFreeQuotaLeft(self) {
-            let error = QueryError.error(
-                type: .api,
-                message: nil,
-                errorDataMessage: NSLocalizedString("insufficient_quota_prompt", comment: "")
-            )
-            currentResult.promptURL = link()
-            currentResult.error = error
-            return (true, currentResult, error)
-        }
 
         return (false, currentResult, nil)
     }

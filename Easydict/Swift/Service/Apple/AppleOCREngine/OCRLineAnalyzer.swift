@@ -461,3 +461,22 @@ class OCRLineAnalyzer {
         )
     }
 }
+
+extension String {
+    /// Similarity between the structural patterns (text vs. punctuation positions) of two lines,
+    /// from 0.0 to 1.0. Used to detect parallel lines such as poetry couplets.
+    fileprivate func structuralSimilarityScore(to text: String) -> Double {
+        let minCount = min(count, text.count)
+        guard minCount > 0 else { return 0 }
+
+        var matchCount = 0
+        for (char1, char2) in zip(prefix(minCount), text.prefix(minCount)) {
+            if !char1.isPunctuation, !char2.isPunctuation {
+                matchCount += 1
+            } else if char1.isPunctuation, char2.isPunctuation, char1 == char2 {
+                matchCount += 1
+            }
+        }
+        return Double(matchCount) / Double(max(count, text.count))
+    }
+}

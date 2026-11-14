@@ -7,6 +7,7 @@
 //
 
 import AppKit
+import CoreServices
 import Foundation
 
 // MARK: - String Input Text Handling
@@ -103,9 +104,7 @@ extension NSString {
 
         // If text is a single English word, don't split it
         if (self as String).isSingleWord {
-            let isEnglishWord = AppleDictionary.shared.queryDictionary(
-                forText: queryText, language: .english
-            )
+            let isEnglishWord = queryText.hasSystemDictionaryEntry
             if !isEnglishWord {
                 if (self as String).hasQuotesPair {
                     queryText = queryText.tryToRemoveQuotes()
@@ -300,5 +299,14 @@ extension NSString {
     private func textsWidths(_ texts: [String]) -> [CGFloat] {
         let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
         return texts.map { $0.width(with: font) }
+    }
+}
+
+extension String {
+    /// Whether the macOS system dictionaries (Dictionary.app) have an entry for this text.
+    /// Used to keep real words such as "LaTeX" intact during code-identifier splitting.
+    var hasSystemDictionaryEntry: Bool {
+        let range = CFRange(location: 0, length: (self as NSString).length)
+        return DCSCopyTextDefinition(nil, self as CFString, range) != nil
     }
 }

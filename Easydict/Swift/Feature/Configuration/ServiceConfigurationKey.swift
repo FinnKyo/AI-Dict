@@ -42,26 +42,13 @@ extension String {
 
 enum ServiceConfigurationKey: String {
     case serviceUsageStatus
-    case translation
-    case dictionary
-    case sentence
     case supportedModels = "AvailableModels" // save in String: "gpt-3.5, gpt-4"
     case validModels // save in [String]
     case model
     case apiKey = "API"
     case endpoint = "EndPoint"
     case name
-    case enableCustomPrompt
-    case systemPrompt
-    case userPrompt
     case thinkTag
     case enableStreaming
     case reasoningEffort = "ReasoningEffort"
-    // Effort level for agent CLI services (e.g. claude --effort). Distinct from
-    // `reasoningEffort`, whose storage slot the StreamService base class already
-    // claims with the incompatible `ReasoningEffort` enum.
-    case cliEffort = "CLIEffort"
-    case codexAccessMode
-    case codexManagedModel
-    case codexManagedReasoningEffort
 }

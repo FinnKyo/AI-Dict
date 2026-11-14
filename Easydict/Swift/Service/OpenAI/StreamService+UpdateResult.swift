@@ -134,22 +134,9 @@ extension StreamService {
             completeWithResult(resultToUpdate, error: completionError)
         }
 
-        switch queryType {
-        case .dictionary:
-            if error != nil {
-                resultToUpdate.showBigWord = false
-                resultToUpdate.translateResultsTopInset = 0
-                updateCompletion()
-                return
-            }
-
-            resultToUpdate.showBigWord = true
-            resultToUpdate.translateResultsTopInset = 6
-            updateCompletion()
-
-        default:
-            updateCompletion()
-        }
+        // The dictionary entry carries its own headword line, so no separate big headword is
+        // shown; otherwise the bare query text would sit alone on screen until output arrives.
+        updateCompletion()
 
         func completeWithResult(_ result: QueryResult, error: Error?) {
             result.error = .queryError(from: error)

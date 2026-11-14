@@ -11,7 +11,6 @@
 #import "EZFixedQueryWindow.h"
 #import "EZCoordinateUtils.h"
 
-static NSTimeInterval const EZFloatingWindowIdleWebViewDiscardDelay = 60.0;
 
 @interface EZWindowManager ()
 
@@ -31,8 +30,6 @@ static NSTimeInterval const EZFloatingWindowIdleWebViewDiscardDelay = 60.0;
 /// The window type that is currently showing.
 @property (nonatomic) EZWindowType windowType;
 
-- (void)scheduleDictionaryWebViewDiscardForWindow:(EZBaseQueryWindow *)window;
-- (void)discardDictionaryWebViewsIfIdleForWindow:(EZBaseQueryWindow *)window;
 
 @end
 
@@ -379,7 +376,6 @@ static EZWindowManager *_instance;
     }
 
     // Log selected text when querying.
-    [self logSelectedTextEvent];
 
     void (^updateQueryTextAndStartQueryBlock)(BOOL) = ^(BOOL needFocus) {
         // Update input text and detect.
@@ -548,9 +544,9 @@ static EZWindowManager *_instance;
 }
 
 - (void)updateWindowsTitlebarButtonsToolTip {
-    [_mainWindow.titleBar updateShortcutButtonsToolTip];
-    [_miniWindow.titleBar updateShortcutButtonsToolTip];
-    [_fixedWindow.titleBar updateShortcutButtonsToolTip];
+    [_mainWindow.titleBar updatePinButton];
+    [_miniWindow.titleBar updatePinButton];
+    [_fixedWindow.titleBar updatePinButton];
 }
 
 /// TODO: need to optimize.
@@ -1009,11 +1005,6 @@ static EZWindowManager *_instance;
     [self.floatingWindow.queryViewController focusInputTextView];
 }
 
-- (void)playOrStopQueryTextAudio {
-    [self.floatingWindow.queryViewController togglePlayQueryText];
-}
-
-
 #pragma mark - Close floating window
 
 /// Close floating window, and record last floating window type.
@@ -1064,23 +1055,6 @@ static EZWindowManager *_instance;
     }
 
     [self updateFloatingWindowType:windowType isShowing:NO];
-    [self scheduleDictionaryWebViewDiscardForWindow:floatingWindow];
-}
-
-- (void)scheduleDictionaryWebViewDiscardForWindow:(EZBaseQueryWindow *)window {
-    SEL selector = @selector(discardDictionaryWebViewsIfIdleForWindow:);
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:selector object:window];
-    [self performSelector:selector
-               withObject:window
-               afterDelay:EZFloatingWindowIdleWebViewDiscardDelay];
-}
-
-- (void)discardDictionaryWebViewsIfIdleForWindow:(EZBaseQueryWindow *)window {
-    if (window.isVisible || window.isPin || MyConfiguration.shared.keepPrevResultWhenEmpty) {
-        return;
-    }
-
-    [window.queryViewController discardDictionaryWebViews];
 }
 
 #pragma mark -
@@ -1113,38 +1087,6 @@ static EZWindowManager *_instance;
         }
     }
     return NO;
-}
-
-- (void)logSelectedTextEvent {
-    NSString *text = self.selectedText;
-
-    if (!text) {
-        return;
-    }
-
-    NSRunningApplication *application = self.eventMonitor.frontmostApplication;
-    NSString *appName = application.localizedName ?: @"";
-    NSString *bundleID = application.bundleIdentifier ?: @"";
-    NSString *textLength = [EZAnalyticsService textLengthRange:text];
-    NSString *triggerType = [EZEnumTypes stringValueOfTriggerType:self.eventMonitor.triggerType];
-
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
-        @"actionType" : self.actionType,
-        @"selectTextType" : self.eventMonitor.selectTextType,
-        @"triggerType" : triggerType,
-        @"textLength" : textLength,
-        @"appName" : appName,
-        @"bundleID" : bundleID,
-    }];
-
-    NSString *browserTabURLString = self.eventMonitor.browserTabURLString;
-    if (browserTabURLString.length) {
-        NSURL *tabURL = [NSURL URLWithString:browserTabURLString];
-        NSString *host = tabURL.host ?: browserTabURLString;
-        dict[@"host"] = host;
-    }
-
-    [EZAnalyticsService logEventWithName:@"getSelectedText" parameters:dict];
 }
 
 @end

@@ -8,22 +8,6 @@
 
 import Foundation
 
-func systemMessage(queryType: EZQueryTextType) -> ChatMessage {
-    switch queryType {
-    case .dictionary:
-        .init(role: .system, content: StreamService.dictSystemPrompt)
-    default:
-        .init(role: .system, content: StreamService.translationSystemPrompt)
-    }
-}
-
-func chatMessagePair(userContent: String, assistantContent: String) -> [ChatMessage] {
-    [
-        .init(role: .user, content: userContent),
-        .init(role: .assistant, content: assistantContent),
-    ]
-}
-
 // MARK: - ChatMessage
 
 struct ChatMessage {
@@ -34,18 +18,10 @@ struct ChatMessage {
         case user
         case assistant
         case tool
-        case model // Gemini role, equal to OpenAI assistant role.
     }
 
     let role: ChatRole
     let content: String
-}
-
-// MARK: - AIToolType
-
-enum AIToolType {
-    case polishing
-    case summary
 }
 
 // MARK: - ChatQueryParam

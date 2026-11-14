@@ -9,9 +9,7 @@
 import Defaults
 import SettingsAccess
 import SFSafeSymbols
-import Sparkle
 import SwiftUI
-import ZipArchive
 
 // MARK: - MenuItemView
 
@@ -48,21 +46,11 @@ struct MenuItemView: View {
 
             Divider()
 
-            translateAndReplaceItem.keyboardShortcut(.translateAndReplace)
-            polishAndReplaceItem.keyboardShortcut(.polishAndReplace)
-
-            Divider()
-
             settingItem.keyboardShortcut(.init(","))
-            checkUpdateItem
-            helpItem
 
             Divider()
 
             quitItem.keyboardShortcut(.init("q"))
-        }
-        .task(id: includeBetaUpdates) {
-            latestVersion = await GitHubReleaseFetcher.latestVersion(includePrerelease: includeBetaUpdates)
         }
     }
 
@@ -74,27 +62,15 @@ struct MenuItemView: View {
 
     // MARK: Private
 
-    @ObservedObject private var store = MenuItemStore()
-
     @State private var currentVersion =
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-
-    @State private var latestVersion: String?
-
-    @Environment(\.openURL) private var openURL
 
     @Default(.showOCRMenuItems) private var showOCRMenuItems
     @Default(.mouseSelectTranslateWindowType) private var mouseSelectTranslateWindowType
     @Default(.shortcutSelectTranslateWindowType) private var shortcutSelectTranslateWindowType
-    @Default(.includeBetaUpdates) private var includeBetaUpdates
 
     private var versionString: String {
-        let defaultLabel = "Easydict  \(currentVersion)"
-        if let latestVersion, GitHubReleaseFetcher.isNewer(latestVersion, than: currentVersion) {
-            return defaultLabel + "  (✨\(latestVersion) )"
-        } else {
-            return defaultLabel
-        }
+        "AI-Dict  \(currentVersion)"
     }
 
     @ViewBuilder private var screenshotItem: some View {
@@ -107,14 +83,6 @@ struct MenuItemView: View {
 
     @ViewBuilder private var pasteboardTranslateItem: some View {
         menuItem(for: .pasteboardTranslate)
-    }
-
-    @ViewBuilder private var polishAndReplaceItem: some View {
-        menuItem(for: .polishAndReplace)
-    }
-
-    @ViewBuilder private var translateAndReplaceItem: some View {
-        menuItem(for: .translateAndReplace)
     }
 
     @ViewBuilder private var miniWindowItem: some View {
@@ -141,9 +109,7 @@ struct MenuItemView: View {
 
     /// Version item
     @ViewBuilder private var versionItem: some View {
-        Button(versionString) {
-            openURL(AppConstants.releasesURL)
-        }
+        Text(versionString)
     }
 
     /// Settings item
@@ -171,66 +137,11 @@ struct MenuItemView: View {
         }
     }
 
-    /// Check Updates item
-    @ViewBuilder private var checkUpdateItem: some View {
-        Button("check_updates") {
-            logInfo("Check Updates")
-            NSApp.activateApp()
-            MyConfiguration.shared.updater.checkForUpdates()
-        }
-        .disabled(!store.canCheckForUpdates)
-    }
-
     /// Quit item
     @ViewBuilder private var quitItem: some View {
         Button("quit") {
             logInfo("Quit Application")
             NSApplication.shared.terminate(nil)
-        }
-    }
-
-    /// Help item
-    @ViewBuilder private var helpItem: some View {
-        Menu("Help") {
-            Button("Feedback") {
-                logInfo("Open Feedback")
-                openURL(AppConstants.issuesURL)
-            }
-            Button("Export Log") {
-                exportLogAction()
-            }
-            Button("Log Directory") {
-                logInfo("Open Log Directory")
-                let pathManager = AppPathManager.current
-                let directoryURL = pathManager.appLogDirectory
-                try? pathManager.ensureDirectoryExists(at: directoryURL)
-                NSWorkspace.shared.open(directoryURL)
-            }
-        }
-    }
-
-    private func exportLogAction() {
-        logInfo("Export Log")
-        let pathManager = AppPathManager.current
-        let directoryURL = pathManager.logsDirectory
-        try? pathManager.ensureDirectoryExists(at: directoryURL)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH-mm-ss-SSS"
-        let dataString = dateFormatter.string(from: Date())
-        let downloadDirectory = FileManager.default.urls(
-            for: .downloadsDirectory, in: .userDomainMask
-        )[0]
-        let zipPath = downloadDirectory.appendingPathComponent("Easydict log \(dataString).zip")
-            .path(percentEncoded: false)
-        let success = SSZipArchive.createZipFile(
-            atPath: zipPath,
-            withContentsOfDirectory: directoryURL.path(percentEncoded: false),
-            keepParentDirectory: false
-        )
-        if success {
-            NSWorkspace.shared.selectFile(zipPath, inFileViewerRootedAtPath: "")
-        } else {
-            logError("Export log failed")
         }
     }
 }
@@ -287,22 +198,6 @@ private struct MenuItemBuilder: View {
             }
         }
     }
-}
-
-// MARK: - MenuItemStore
-
-final class MenuItemStore: ObservableObject {
-    // MARK: Lifecycle
-
-    init() {
-        MyConfiguration.shared.updater
-            .publisher(for: \.canCheckForUpdates)
-            .assign(to: &$canCheckForUpdates)
-    }
-
-    // MARK: Internal
-
-    @Published var canCheckForUpdates = false
 }
 
 #Preview {

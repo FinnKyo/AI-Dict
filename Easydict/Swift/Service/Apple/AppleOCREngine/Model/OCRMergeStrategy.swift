@@ -122,6 +122,6 @@ enum OCRMergeStrategy: CustomStringConvertible {
 
     /// Language detector for determining language context of joined text.
     static private var languageDetector: AppleLanguageDetector {
-        AppleLanguageDetector(enableClassicalChineseDetection: false)
+        AppleLanguageDetector()
     }
 }

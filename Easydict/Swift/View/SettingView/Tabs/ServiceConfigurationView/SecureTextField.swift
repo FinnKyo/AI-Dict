@@ -70,28 +70,3 @@ struct SecureTextField: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.lineLimit) private var lineLimit
 }
-
-// MARK: - SecureInput_Previews
-
-struct SecureInput_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            SecureTextField(
-                title: "caiyun_translate",
-                placeholder: String(localized: "service.configuration.input.placeholder"),
-                text: .constant("1234567")
-            )
-            .padding()
-            .previewLayout(.fixed(width: 400, height: 100))
-
-            SecureTextField(
-                title: "caiyun_translate",
-                placeholder: String(localized: "service.configuration.input.placeholder"),
-                text: .constant("")
-            )
-            .padding()
-            .preferredColorScheme(.dark)
-            .previewLayout(.fixed(width: 400, height: 100))
-        }
-    }
-}

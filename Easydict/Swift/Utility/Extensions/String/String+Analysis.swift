@@ -32,59 +32,6 @@ extension String {
     }
 }
 
-// MARK: - Query Type Analysis
-
-extension String {
-    /// Determine query type based on language and word count constraints
-
-    func queryType(language: Language, maxWordCount: Int) -> QueryTextType {
-        if shouldQueryDictionary(withLanguage: language, maxWordCount: maxWordCount) {
-            return .dictionary
-        }
-
-        if shouldQuerySentence(withLanguage: language), language == .english {
-            return .sentence
-        }
-
-        return .translation
-    }
-
-    /// Check if text should be queried as dictionary entry
-
-    func shouldQueryDictionary(withLanguage language: Language, maxWordCount: Int) -> Bool {
-        // Check if language is Chinese based
-        let chineseLanguages: Set<Language> = [
-            .simplifiedChinese, .traditionalChinese, .classicalChinese,
-        ]
-
-        if chineseLanguages.contains(language) {
-            // For Chinese, use word count from tokenizer
-            // but restrict by character count as well
-            guard count <= maxWordCount else { return false }
-            return isChineseWord || isChinesePhrase
-        }
-
-        if language == .english {
-            // For English, check both length and word count
-            guard count <= Self.englishWordMaxLength else { return false }
-            let words = wordCount
-            return words == 1
-        }
-
-        return false
-    }
-
-    /// Check if text should be queried as sentence
-
-    func shouldQuerySentence(withLanguage language: Language) -> Bool {
-        // Single words should never query sentence
-        guard wordCount > 1 || hasEndPunctuationSuffix else { return false }
-        // Don't query dictionary for this text
-        guard !shouldQueryDictionary(withLanguage: language, maxWordCount: 1) else { return false }
-        return true
-    }
-}
-
 // MARK: - Spelling Check
 
 extension String {
@@ -158,19 +105,6 @@ extension String {
 
 @objc
 extension NSString {
-    @objc(queryTypeWithLanguage:maxWordCount:)
-    func queryType(withLanguage language: Language, maxWordCount: Int) -> EZQueryTextType {
-        (self as String).queryType(language: language, maxWordCount: maxWordCount)
-    }
-
-    func shouldQueryDictionary(withLanguage language: Language, maxWordCount: Int) -> Bool {
-        (self as String).shouldQueryDictionary(withLanguage: language, maxWordCount: maxWordCount)
-    }
-
-    func shouldQuerySentence(withLanguage language: Language) -> Bool {
-        (self as String).shouldQuerySentence(withLanguage: language)
-    }
-
     func isSpelledCorrectly() -> Bool {
         (self as String).isSpelledCorrectly
     }

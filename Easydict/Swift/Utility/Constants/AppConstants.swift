@@ -17,16 +17,17 @@ import Foundation
 final class AppConstants: NSObject {
     // MARK: - App
 
-    static let bundleID = "com.izual.Easydict"
-    static let debugBundleID = "com.izual.Easydict-debug"
+    static let bundleID = "io.github.aidict.AIDict"
+    static let debugBundleID = "io.github.aidict.AIDict-debug"
+
+    /// Easydict's crash reporting and analytics belong to the upstream project, so the fork keeps them off.
+    static let upstreamTelemetryEnabled = false
 
     // MARK: - Repository
 
     /// Repository full name, eg. tisfeng/Easydict
-    static let repoName = "tisfeng/Easydict"
-    static let repoURL = URL(string: "https://github.com/\(repoName)")!
-    static let releasesURL = repoURL.appending(path: "releases")
-    static let issuesURL = repoURL.appending(path: "issues")
+    /// AI-Dict is a modified version of Easydict (GPL-3.0); the About page links to it.
+    static let upstreamRepoURL = URL(string: "https://github.com/tisfeng/Easydict")!
 
     // MARK: - Network
 

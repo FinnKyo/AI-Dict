@@ -27,16 +27,6 @@ enum AppPathMigration {
                     source: pathManager.legacyAppLogDirectory,
                     destination: pathManager.appLogDirectory
                 ),
-                Migration(
-                    name: "audio cache",
-                    source: pathManager.legacyAudioCacheDirectory,
-                    destination: pathManager.audioCacheDirectory
-                ),
-                Migration(
-                    name: "MDict metadata cache",
-                    source: pathManager.legacyMDictMetadataCacheDirectory,
-                    destination: pathManager.mdictMetadataCacheDirectory
-                ),
             ]
 
             for migration in migrations {

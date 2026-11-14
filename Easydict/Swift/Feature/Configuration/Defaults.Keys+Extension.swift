@@ -42,14 +42,7 @@ extension Defaults.Keys {
         default: 0
     )
     static let clickQuery = Key<Bool>("EZConfiguration_kClickQueryKey", default: false)
-    static let autoPlayAudio = Key<Bool>("EZConfiguration_kAutoPlayAudioKey", default: false)
-    static let pronunciation = Key<EnglishPronunciation>(
-        "EZConfiguration_kPronunciationKey",
-        default: EnglishPronunciation.us
-    )
     static let hideMainWindow = Key<Bool>("EZConfiguration_kHideMainWindowKey", default: true)
-    static let ocrServiceID = Key<String>("EZConfiguration_kOCRServiceID", default: ServiceType.apple.rawValue)
-    static let localAutoSave = Key<Bool>("EZConfiguration_kLocalAutoSave", default: false)
     static let autoQueryOCRText = Key<Bool>("EZConfiguration_kAutoQueryOCTTextKey", default: true)
     static let autoQuerySelectedText = Key<Bool>(
         "EZConfiguration_kAutoQuerySelectedTextKey", default: true
@@ -68,31 +61,7 @@ extension Defaults.Keys {
         "EZConfiguration_kAutoCopyFirstTranslatedTextKey",
         default: false
     )
-    static let languageDetectOptimize = Key<LanguageDetectOptimize>(
-        "EZConfiguration_kLanguageDetectOptimizeTypeKey",
-        default: LanguageDetectOptimize.none
-    )
-    static let defaultTTSServiceType = Key<TTSServiceType>(
-        "EZConfiguration_kDefaultTTSServiceTypeKey",
-        default: TTSServiceType.youdao
-    )
-    /// When enabled, English words are spoken via Youdao TTS regardless of the
-    /// configured default TTS service. Defaults to `true` to preserve the long
-    /// standing behavior of using Youdao's high quality dictionary recordings.
-    static let preferYoudaoTTSForEnglishWord = Key<Bool>(
-        "EZConfiguration_kPreferYoudaoTTSForEnglishWordKey",
-        default: true
-    )
-    static let showGoogleQuickLink = Key<Bool>("EZConfiguration_kShowGoogleLinkKey", default: true)
-    static let showEudicQuickLink = Key<Bool>("EZConfiguration_kShowEudicLinkKey", default: true)
-    static let showAppleDictionaryQuickLink = Key<Bool>(
-        "EZConfiguration_kShowAppleDictionaryLinkKey", default: true
-    )
-    static let showQuickActionButton = Key<Bool>(
-        "EZConfiguration_kShowSettingQuickLink", default: true
-    )
     static let hideMenuBarIcon = Key<Bool>("EZConfiguration_kHideMenuBarIconKey", default: false)
-    static let includeBetaUpdates = Key<Bool>("EZConfiguration_kIncludeBetaUpdatesKey", default: false)
     static let fixedWindowPosition = Key<EZShowWindowPosition>(
         "EZConfiguration_kShowFixedWindowPositionKey",
         default: .right
@@ -112,9 +81,6 @@ extension Defaults.Keys {
     static let pinWindowWhenDisplayed = Key<Bool>(
         "EZConfiguration_kPinWindowWhenDisplayed", default: false
     )
-
-    static let allowCrashLog = Key<Bool>("EZConfiguration_kAllowCrashLogKey", default: true)
-    static let allowAnalytics = Key<Bool>("EZConfiguration_kAllowAnalyticsKey", default: true)
 
     static let clearQueryWhenInputTranslate = Key<Bool>(
         "EZConfiguration_kClearInputKey", default: false
@@ -149,35 +115,6 @@ extension Defaults.Keys {
         "EZConfiguration_kReplaceNewlineWithSpace", default: false
     )
 
-    static let enableBetaFeature = Key<Bool>("EZBetaFeatureKey", default: false)
-    static var enableYoudaoOCR = Key<Bool>("enableYoudaoOCR", default: false)
-    static var enableCompatibilityReplace = Key<Bool>(
-        "replaceWithTranslationInCompatibilityMode",
-        default: false
-    )
-    static var enableHTTPServer = Key<Bool>("enableHTTPServer", default: false)
-    static var httpPort = Key<String>("httpPort", default: "8080")
-
-    static var enableAnkiConnect = Key<Bool>("enableAnkiConnect", default: false)
-    static var ankiConnectEndpoint = Key<String>(
-        "ankiConnectEndpoint",
-        default: "http://127.0.0.1:8765"
-    )
-    static var ankiConnectDeck = Key<String>("ankiConnectDeck", default: "Default")
-    static var ankiConnectModel = Key<String>("ankiConnectModel", default: "Basic")
-    static var ankiConnectFrontField = Key<String>("ankiConnectFrontField", default: "Front")
-    static var ankiConnectBackField = Key<String>("ankiConnectBackField", default: "Back")
-    static var ankiConnectModelFields = Key<[String]>("ankiConnectModelFields", default: [])
-    static var ankiConnectFieldMappings = Key<[AnkiFieldMapping]>(
-        "ankiConnectFieldMappings",
-        default: []
-    )
-    static var enableVocabularyNotebook = Key<Bool>("enableVocabularyNotebook", default: false)
-    static var vocabularyNotebookDirectory = Key<String>("vocabularyNotebookDirectory", default: "")
-
-    static var enableAppleOfflineTranslation = Key<Bool>(
-        "enableAppleOfflineTranslation", default: false
-    )
     static var enableOCRTextNormalization = Key<Bool>(
         "enableOCRTextNormalization", default: false
     )
@@ -187,11 +124,6 @@ extension Defaults.Keys {
     /// Controls whether the screenshot tip layer is hidden during capture.
     static var isScreenshotTipLayerHidden = Key<Bool>(
         "isScreenshotTipLayerHidden", default: false
-    )
-
-    static var minClassicalChineseTextDetectLength = Key<String>(
-        "minClassicalChineseTextDetectLength",
-        default: "\(AppConstants.minClassicalChineseLength)"
     )
 
     static let enableForceGetSelectedText = Key<Bool>(
@@ -210,14 +142,8 @@ extension Defaults.Keys {
 
     /// Whether AI/streaming service results should render Markdown formatting
     /// (headings, bold, lists, blockquotes, code) in the result label.
-    /// Plain-text services (Google, Bing, DeepL, etc.) ignore this setting.
     static let enableMarkdownRendering = Key<Bool>(
         "EZConfiguration_kEnableMarkdownRendering",
-        default: true
-    )
-
-    static let autoSelectAllTextFieldText = Key<Bool>(
-        "EZConfiguration_kAutoSelectAllTextFieldText",
         default: true
     )
 
@@ -241,24 +167,9 @@ extension Defaults.Keys {
     // Key for storing the selected max window height percentage, default is 100%.
     // Storing as Int (e.g., 50, 80, 100).
     static let maxWindowHeightPercentage = Key<Int>("maxWindowHeightPercentage", default: 100)
-
-    // MARK: - Favorites and History
-
-    static let favorites = Key<[QueryRecord]>("EZConfiguration_kFavorites", default: [])
-    static let queryHistory = Key<[QueryRecord]>("EZConfiguration_kQueryHistory", default: [])
 }
 
 extension Defaults.Keys {
-    static func intelligentQueryTextType(for serviceType: ServiceType) -> Key<EZQueryTextType> {
-        let key = EZConstKey.constkey("IntelligentQueryTextType", serviceType: serviceType)
-        return .init(key, default: EZQueryTextType(rawValue: 7))
-    }
-
-    static func queryTextType(for serviceType: ServiceType) -> Key<EZQueryTextType> {
-        let key = EZConstKey.constkey("QueryTextType", serviceType: serviceType)
-        return .init(key, default: EZQueryTextType(rawValue: 1))
-    }
-
     static func windowFrame(for windowType: EZWindowType) -> Key<CGRect> {
         let key = "EZConfiguration_kWindowFrameKey_\(windowType)"
         return .init(key, default: .zero)
@@ -357,54 +268,6 @@ class ShortcutWrapper<T: KeyCombo> {
     }
 }
 
-private let EZDeepLTranslationAPIKey = "EZDeepLTranslationAPIKey"
-
-// Service Configuration
-extension Defaults.Keys {
-    // DeepL
-    static let deepLAuth = Key<String>(EZDeepLAuthKey, default: "")
-    static let deepLWebAppVersionCache = Key<String>(
-        "EZDeepLWebAppVersionCacheKey",
-        default: ""
-    )
-    static let deepLTranslation = Key<DeepLAPIUsagePriority>(
-        EZDeepLTranslationAPIKey,
-        default: DeepLAPIUsagePriority.webFirst
-    )
-    static let deepLTranslateEndPointKey = Key<String>(EZDeepLTranslateEndPointKey, default: "")
-
-    // Bing
-    static let bingCookieKey = Key<String>(EZBingCookieKey, default: "")
-
-    // niu
-    static let niuTransAPIKey = Key<String>(EZNiuTransAPIKey, default: "")
-
-    // Caiyun
-    static let caiyunToken = Key<String>(EZCaiyunToken, default: "")
-
-    // Ali
-    static let aliAccessKeyId = Key<String>(EZAliAccessKeyId, default: "")
-    static let aliAccessKeySecret = Key<String>(EZAliAccessKeySecret, default: "")
-    static let aliServiceApiTypeKey = Key<ServiceAPIType>(
-        EZAliServiceApiTypeKey, default: .secretKey
-    )
-
-    // baidu
-    static let baiduAppId = Key<String>(EZBaiduAppId, default: "")
-    static let baiduSecretKey = Key<String>(EZBaiduSecretKey, default: "")
-    static let baiduServiceApiTypeKey = Key<ServiceAPIType>(
-        EZBaiduServiceApiTypeKey, default: .secretKey
-    )
-
-    // Volcano
-    static let volcanoAccessKeyID = Key<String>(EZVolcanoAccessKeyID, default: "")
-    static let volcanoSecretAccessKey = Key<String>(EZVolcanoSecretAccessKey, default: "")
-
-    // Doubao
-    static let doubaoAPIKey = Key<String>(EZDoubaoAPIKey, default: "")
-    static let doubaoModel = Key<String>(EZDoubaoModelKey, default: DoubaoService.defaultModelIdentifier)
-}
-
 /// shortcut
 extension Defaults.Keys {
     // Global
@@ -420,12 +283,6 @@ extension Defaults.Keys {
     static let pasteboardTranslateShortcut = Key<KeyCombo?>(
         "EZPasteboardTranslateShortcutKey_keyHolder"
     )
-    static let translateAndReplaceShortcut = Key<KeyCombo?>(
-        "EZTranslateAndReplaceShortcutKey_keyHolder"
-    )
-    static let polishAndReplaceShortcut = Key<KeyCombo?>(
-        "EZPolishAndReplaceShortcutKey_keyHolder"
-    )
 
     static let screenshotOCRShortcut = Key<KeyCombo?>("EZScreenshotOCRShortcutKey2_keyHolder")
     static let pasteboardOCRShortcut = Key<KeyCombo?>("EZPasteboardOCRShortcutKey_keyHolder")
@@ -437,14 +294,10 @@ extension Defaults.Keys {
     static let copyShortcut = Key<KeyCombo?>("EZCopyShortcutKey_keyHolder")
     static let copyFirstResultShortcut = Key<KeyCombo?>("EZCopyFirstResultShortcutKey_keyHolder")
     static let focusShortcut = Key<KeyCombo?>("EZFocusShortcutKey_keyHolder")
-    static let playShortcut = Key<KeyCombo?>("EZPlayShortcutKey_keyHolder")
     static let retryShortcut = Key<KeyCombo?>("EZRetryShortcutKey_keyHolder")
     static let toggleShortcut = Key<KeyCombo?>("EZToggleShortcutKey_keyHolder")
     static let pinShortcut = Key<KeyCombo?>("EZPinShortcutKey_keyHolder")
     static let hideShortcut = Key<KeyCombo?>("EZHideShortcutKey_keyHolder")
     static let increaseFontSize = Key<KeyCombo?>("EZIncreaseFontSizeShortcutKey_keyHolder")
     static let decreaseFontSize = Key<KeyCombo?>("EZDecreaseFontSizeShortcutKey_keyHolder")
-    static let googleShortcut = Key<KeyCombo?>("EZGoogleShortcutKey_keyHolder")
-    static let eudicShortcut = Key<KeyCombo?>("EZEudicShortcutKey_keyHolder")
-    static let appleDictionaryShortcut = Key<KeyCombo?>("EZAppleDictionaryShortcutKey_keyHolder")
 }

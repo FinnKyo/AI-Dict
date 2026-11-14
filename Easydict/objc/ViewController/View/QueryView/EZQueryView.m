@@ -14,7 +14,6 @@
 #include <Carbon/Carbon.h>
 #import "NSView+EZAnimatedHidden.h"
 #import "EZDetectLanguageButton.h"
-#import "EZSchemeParser.h"
 #import "EZCopyButton.h"
 #import "NSImage+EZSymbolmage.h"
 
@@ -38,7 +37,6 @@ static const NSTimeInterval EZAutoQueryWhenTextChangedDelay = 0.8;
 @property (nonatomic, copy) NSString *lastRecordText;
 @property (nonatomic, assign) NSTimeInterval lastRecordTimestamp;
 
-@property (nonatomic, strong) EZSchemeParser *schemeParser;
 @property (nonatomic, strong) id fontSizeObserver;
 @property (nonatomic, strong) EDMarkdownLabel *formulaPreview;
 @property (nonatomic, assign) BOOL didChooseFormulaView;
@@ -135,24 +133,6 @@ static const NSTimeInterval EZAutoQueryWhenTextChangedDelay = 0.8;
         make.left.equalTo(scrollView).offset(10);
         make.height.mas_equalTo(30);
     }];
-    
-    EZAudioButton *audioButton = [[EZAudioButton alloc] init];
-    [self addSubview:audioButton];
-    self.audioButton = audioButton;
-
-    [audioButton setPlayStatus:^(BOOL isPlaying, EZAudioButton *audioButton) {
-        NSString *action = isPlaying ? NSLocalizedString(@"stop_play_audio", nil) : NSLocalizedString(@"play_audio", nil);
-        NSString *shortcut = @"⌘+S";
-        audioButton.toolTip = [NSString stringWithFormat:@"%@, %@", action, shortcut];
-    }];
-
-    [audioButton setPlayAudioBlock:^{
-        mm_strongify(self);
-        if (self.playAudioBlock) {
-            self.playAudioBlock(self.copiedText);
-        }
-    }];
-    audioButton.mas_key = @"queryView_audioButton";
     
     EZCopyButton *textCopyButton = [[EZCopyButton alloc] init];
     [self addSubview:textCopyButton];
@@ -305,28 +285,23 @@ static const NSTimeInterval EZAutoQueryWhenTextChangedDelay = 0.8;
 - (void)updateConstraints {
     [self updateCustomLayout];
     
-    [self.audioButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.textCopyButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-EZAudioButtonBottomMargin_4);
         make.left.offset(EZAudioButtonLeftMargin_6);
         make.width.height.mas_equalTo(EZAudioButtonWidthHeight_24);
     }];
     
-    [self.textCopyButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.audioButton.mas_right).offset(EZAudioButtonRightPadding_1);
-        make.width.height.bottom.equalTo(self.audioButton);
-    }];
-    
     [self.markdownButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.textCopyButton.mas_right).offset(EZAudioButtonRightPadding_1);
-        make.width.height.bottom.equalTo(self.audioButton);
+        make.width.height.bottom.equalTo(self.textCopyButton);
     }];
 
     [self updateDetectButton];
 
     [self.scrollView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.inset(0);
-        // Add a padding to audio button, avoid making users feel that there is still text below that has not been fully displayed.
-        make.bottom.equalTo(self.audioButton.mas_top).offset(-EZAudioButtonInputViewTopPadding_4);
+        // Add a padding to the tool bar buttons, avoid making users feel that there is still text below that has not been fully displayed.
+        make.bottom.equalTo(self.textCopyButton.mas_top).offset(-EZAudioButtonInputViewTopPadding_4);
         
         CGFloat textViewHeight = [self heightOfTextView];
         make.height.mas_greaterThanOrEqualTo(textViewHeight);
@@ -507,13 +482,6 @@ static const NSTimeInterval EZAutoQueryWhenTextChangedDelay = 0.8;
 
 - (NSString *)copiedText {
     return [self.textView.string copy];
-}
-
-- (EZSchemeParser *)schemeParser {
-    if (!_schemeParser) {
-        _schemeParser = [[EZSchemeParser alloc] init];
-    }
-    return _schemeParser;
 }
 
 #pragma mark - NSTextViewDelegate
@@ -777,11 +745,6 @@ static const NSTimeInterval EZAutoQueryWhenTextChangedDelay = 0.8;
 
 /// Highlight all links in textstorage
 - (void)highlightAllLinks {
-    BOOL isEasydictSchema = [self.schemeParser isEasydictScheme:self.textView.string];
-    if (isEasydictSchema) {
-        return;
-    }
-    
     NSTextStorage *textStorage = self.textView.textStorage;
     [self removeAllLinks];
     

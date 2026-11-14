@@ -452,13 +452,6 @@ struct AppleLanguageDetectorTests {
     func testCatalanLanguageCodeMapping() {
         #expect(Language.language(fromCode: "ca") == .catalan)
         #expect(AppleLanguageMapper.shared.languageCode(for: .catalan) == "ca")
-        #expect(GoogleService().languageCode(for: .catalan) == "ca")
-        #expect(GoogleService().language(fromCode: "ca") == .catalan)
-        #expect(BingService().languageCode(forLanguage: .catalan) == "ca")
-        #expect(BaiduService().languageCode(forLanguage: .catalan) == "cat")
-        #expect(AliTranslateType.supportLanguagesDictionary[.catalan] == "ca")
-        #expect(DeepLService().languageCode(for: .catalan) == "ca")
-        #expect(NiuTransService().languageCode(forLanguage: .catalan) == "ca")
     }
 
     @Test("Brazilian Portuguese Language Code Mapping", .tags(.apple, .unit))
@@ -620,7 +613,7 @@ private final class LanguageDetectorStub: AppleLanguageDetector {
 
     init(probabilities: [[NLLanguage: Double]]) {
         self.probabilities = probabilities
-        super.init(enableClassicalChineseDetection: false)
+        super.init()
     }
 
     // MARK: Internal

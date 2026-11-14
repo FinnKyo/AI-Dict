@@ -6,7 +6,6 @@
 #import "EZConstKey.h"
 #import "EZConst.h"
 #import "NSColor+MyColors.h"
-#import "entry.h"
 #import "AppDelegate.h"
 #import "EZWindowManager.h"
 #import "NSViewController+EZWindow.h"
@@ -14,10 +13,7 @@
 #import "EZToast.h"
 
 #import "MMCrash.h"
-#import "DictionaryKit.h"
-#import "EZAudioPlayer.h"
 
-#import "EZWebViewManager.h"
 #import "EZOCRResult.h"
 #import "EZWindowPatch.h"
 

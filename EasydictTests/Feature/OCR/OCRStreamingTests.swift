@@ -285,57 +285,6 @@ struct OCRStreamingTests {
         #expect(!config.autoQueryOCRText)
     }
 
-    @Test("Screenshot favorites keep the displayed result languages after another window changes selectors")
-    func favoriteKeepsCapturedLanguages() async throws {
-        let originalFavorites = Defaults[.favorites]
-        let originalFrom = Defaults[.queryFromLanguage]
-        let originalTo = Defaults[.queryToLanguage]
-        defer {
-            Defaults[.favorites] = originalFavorites
-            Defaults[.queryFromLanguage] = originalFrom
-            Defaults[.queryToLanguage] = originalTo
-        }
-        let first = try await makeController()
-        let second = try await makeController()
-        let model = try #require(first.value(forKey: "queryModel") as? QueryModel)
-        let source = #"Favorite regression \(x_j^2\) "# + UUID().uuidString
-        model.inputText = source
-        model.actionType = .ocrQuery
-        let service = SingleResultOCRService()
-        let result = QueryResult()
-        result.queryText = model.queryText
-        result.from = .english
-        result.to = .simplifiedChinese
-        result.translatedResults = [#"收藏回归 \(x_j^2\)"#]
-        service.result = result
-        first.setValue(service, forKey: "firstService")
-        Defaults[.queryFromLanguage] = .french
-        Defaults[.queryToLanguage] = .german
-        let secondModel = try #require(second.value(forKey: "queryModel") as? QueryModel)
-        try await waitUntil { model.userSourceLanguage == .french && secondModel.userTargetLanguage == .german }
-        let windowType = try #require(NSClassFromString("EZBaseQueryWindow") as? NSWindow.Type)
-        let window = windowType.init(
-            contentRect: NSRect(x: 0, y: 0, width: 600, height: 400),
-            styleMask: [.borderless],
-            backing: .buffered,
-            defer: false
-        )
-        window.isReleasedWhenClosed = false
-        defer { window.close() }
-        window.setValue(first, forKey: "queryViewController")
-        let titleType = try #require(NSClassFromString("EZTitlebar") as? NSView.Type)
-        let titlebar = titleType.init(frame: NSRect(x: 0, y: 0, width: 600, height: 30))
-        window.contentView?.addSubview(titlebar)
-        titlebar.perform(NSSelectorFromString("addFavoriteIfNeeded"))
-        let saved = try #require(Defaults[.favorites].first { $0.queryText == source })
-        #expect(saved.queryFromLanguage == .english)
-        #expect(saved.queryToLanguage == .simplifiedChinese)
-        #expect(saved.translatedResult == result.translatedText)
-        // A stale first result must not supply the direction for unrelated input.
-        model.inputText = "Unrelated new source"
-        #expect(first.perform(NSSelectorFromString("firstTranslatedResult"))?.takeUnretainedValue() == nil)
-    }
-
     // MARK: Private
 
     /// Attach only this fixed-input view, keeping the user's desktop and configuration out of test artifacts.

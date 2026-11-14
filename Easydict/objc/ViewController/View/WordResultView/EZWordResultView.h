@@ -1,5 +1,5 @@
 //
-//  EZCommonResultView.h
+//  EZWordResultView.h
 //  Easydict
 //
 //  Created by tisfeng on 2022/11/9.
@@ -7,27 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 
 @class EZQueryResult;
 @class EZQueryService;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EZWordResultView : NSView <WKNavigationDelegate>
+/// Renders one service result: the headword, the (Markdown) result text and a small tool bar.
+@interface EZWordResultView : NSView
 
 @property (nonatomic, assign, readonly) CGFloat viewHeight;
 @property (nonatomic, strong, readonly) EZQueryResult *result;
 @property (nonatomic, strong) EZQueryService *service;
-@property (nonatomic, strong, nullable) WKWebView *webView;
-@property (nonatomic, strong, readonly) NSButton *replaceTextButton;
-
-
-@property (nonatomic, copy) void (^queryTextBlock)(NSString *word);
 
 @property (nonatomic, copy) void (^updateViewHeightBlock)(CGFloat viewHeight);
-
-@property (nonatomic, copy) void (^didFinishLoadingHTMLBlock)(void);
 
 - (void)refreshWithResult:(EZQueryResult *)result;
 

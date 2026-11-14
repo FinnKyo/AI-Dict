@@ -36,23 +36,23 @@ struct WindowConfigurationView: View {
     @Default var showSelectLanguageTextField: Bool
     let windowType: EZWindowType
 
+    /// One settings section per window type, embedded in the Advanced tab.
     var body: some View {
-        Form {
-            Section {
-                NotifyingToggle(
-                    title: "setting.service.show_input_text_field",
-                    isOn: $showInputTextField,
-                    windowType: windowType
-                )
+        Section {
+            NotifyingToggle(
+                title: "setting.service.show_input_text_field",
+                isOn: $showInputTextField,
+                windowType: windowType
+            )
 
-                NotifyingToggle(
-                    title: "setting.service.show_select_language_bar",
-                    isOn: $showSelectLanguageTextField,
-                    windowType: windowType
-                )
-            }
+            NotifyingToggle(
+                title: "setting.service.show_select_language_bar",
+                isOn: $showSelectLanguageTextField,
+                windowType: windowType
+            )
+        } header: {
+            Text(windowType.localizedStringResource)
         }
-        .formStyle(.grouped)
     }
 }
 

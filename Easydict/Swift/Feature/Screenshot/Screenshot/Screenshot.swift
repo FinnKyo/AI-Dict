@@ -80,10 +80,6 @@ class Screenshot: NSObject {
         removeEventMonitor()
         overlayViewStates.removeAll()
 
-        if Defaults[.localAutoSave], let image {
-            image.write(to: AppPathManager.current.snipImageFileURL, using: .png)
-        }
-
         // Result windows may activate the app; no old capture cleanup runs after them.
         completion?(image)
     }

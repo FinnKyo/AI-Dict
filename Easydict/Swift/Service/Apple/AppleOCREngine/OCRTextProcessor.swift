@@ -44,14 +44,12 @@ public class OCRTextProcessor {
     ///   - observations: The unified `EZRecognizedTextObservation` array from the unified Vision API.
     ///   - ocrImage: The source image, used for spatial calculations.
     ///   - smartMerging: A flag to enable the advanced text processing pipeline.
-    ///   - textAnalysis: Optional text analysis data for enhanced processing.
     ///   - legacyObservations: Optional legacy observations for intelligent processing pipeline.
     func setupOCRResult(
         _ ocrResult: EZOCRResult,
         observations: [EZRecognizedTextObservation],
         ocrImage: NSImage,
-        smartMerging: Bool,
-        textAnalysis: TextAnalysis?
+        smartMerging: Bool
     ) {
         // Set basic OCR result properties using unified observations
         updateOCRResult(ocrResult, observations: observations)
@@ -62,8 +60,7 @@ public class OCRTextProcessor {
         performIntelligentMerging(
             ocrResult,
             observations: observations,
-            ocrImage: ocrImage,
-            textAnalysis: textAnalysis
+            ocrImage: ocrImage
         )
     }
 
@@ -75,8 +72,7 @@ public class OCRTextProcessor {
     private func performIntelligentMerging(
         _ ocrResult: EZOCRResult,
         observations: [EZRecognizedTextObservation],
-        ocrImage: NSImage,
-        textAnalysis: TextAnalysis?
+        ocrImage: NSImage
     ) {
         let startTime = CFAbsoluteTimeGetCurrent()
 
@@ -91,8 +87,7 @@ public class OCRTextProcessor {
         let (processedBands, totalConfidence) = processBands(
             detectedBands,
             ocrResult: ocrResult,
-            ocrImage: ocrImage,
-            textAnalysis: textAnalysis
+            ocrImage: ocrImage
         )
 
         // Step 3: Store results and calculate confidence
@@ -111,8 +106,7 @@ public class OCRTextProcessor {
     private func processBands(
         _ bands: [OCRBand],
         ocrResult: EZOCRResult,
-        ocrImage: NSImage,
-        textAnalysis: TextAnalysis?
+        ocrImage: NSImage
     )
         -> (processedBands: [OCRBand], totalConfidence: Double) {
         var processedBands: [OCRBand] = []
@@ -125,8 +119,7 @@ public class OCRTextProcessor {
                 band,
                 bandIndex: bandIndex,
                 ocrResult: ocrResult,
-                ocrImage: ocrImage,
-                textAnalysis: textAnalysis
+                ocrImage: ocrImage
             )
 
             totalConfidence += bandConfidence
@@ -141,8 +134,7 @@ public class OCRTextProcessor {
         _ band: OCRBand,
         bandIndex: Int,
         ocrResult: EZOCRResult,
-        ocrImage: NSImage,
-        textAnalysis: TextAnalysis?
+        ocrImage: NSImage
     )
         -> (processedSections: [OCRSection], bandConfidence: Double) {
         var processedSections: [OCRSection] = []
@@ -153,8 +145,7 @@ public class OCRTextProcessor {
 
             let language = detectLanguageForSection(
                 observations: observations,
-                ocrResult: ocrResult,
-                textAnalysis: textAnalysis
+                ocrResult: ocrResult
             )
 
             log(
@@ -164,8 +155,7 @@ public class OCRTextProcessor {
             let ocrSection = createAndSetupOCRSection(
                 observations: observations,
                 language: language,
-                ocrImage: ocrImage,
-                textAnalysis: textAnalysis
+                ocrImage: ocrImage
             )
 
             let mergedText = performSectionMerging(
@@ -185,18 +175,11 @@ public class OCRTextProcessor {
     /// Detects the appropriate language for a section.
     private func detectLanguageForSection(
         observations: [EZRecognizedTextObservation],
-        ocrResult: EZOCRResult,
-        textAnalysis: TextAnalysis?
+        ocrResult: EZOCRResult
     )
         -> Language {
         var language = ocrResult.from
         guard language == .auto else { return language }
-
-        // Check for classical poetry/lyric genre
-        if let genre = textAnalysis?.genre, genre.isPoetryLyric {
-            log("Text analysis genre: \(genre)")
-            return .classicalChinese
-        }
 
         // Auto-detect language
         language = languageDetector.detectLanguage(text: observations.simpleMergedText)
@@ -208,16 +191,10 @@ public class OCRTextProcessor {
     private func createAndSetupOCRSection(
         observations: [EZRecognizedTextObservation],
         language: Language,
-        ocrImage: NSImage,
-        textAnalysis: TextAnalysis?
+        ocrImage: NSImage
     )
         -> OCRSection {
         let ocrSection = OCRSection()
-
-        // Set genre for classical Chinese
-        if language == .classicalChinese {
-            ocrSection.genre = textAnalysis?.genre ?? .plain
-        }
 
         ocrSection.setupWithOCRData(
             ocrImage: ocrImage,

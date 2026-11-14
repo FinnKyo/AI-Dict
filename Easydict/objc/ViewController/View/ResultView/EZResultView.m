@@ -39,10 +39,6 @@
 }
 
 - (void)setup {
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                          selector:@selector(copilotModelsDidChange:)
-                                              name:NSNotification.githubCopilotModelsDidChange
-                                            object:nil];
     self.wantsLayer = YES;
     self.layer.cornerRadius = EZCornerRadius_8;
     [self.layer executeLight:^(CALayer *layer) {
@@ -131,11 +127,6 @@
     EZWordResultView *wordResultView = [[EZWordResultView alloc] initWithFrame:self.bounds];
     [self addSubview:wordResultView];
     self.wordResultView = wordResultView;
-    
-    [wordResultView setDidFinishLoadingHTMLBlock:^{
-        mm_strongify(self);
-        [self.loadingView startLoading:NO];
-    }];
     
     EZHoverButton *arrowButton = [[EZHoverButton alloc] init];
     self.arrowButton = arrowButton;
@@ -317,11 +308,6 @@
     [self setNeedsUpdateConstraints:YES];
 }
 
-- (void)setQueryTextBlock:(void (^)(NSString *_Nonnull))clickTextBlock {
-    _queryTextBlock = clickTextBlock;
-    self.wordResultView.queryTextBlock = clickTextBlock;
-}
-
 #pragma mark -
 
 - (void)updateConstraints {
@@ -369,19 +355,10 @@
 
 - (void)updateExpandedState {
     [self updateAllButtonStatus];
-    CGFloat contentHeight = self.wordResultView.viewHeight ?: self.result.webViewManager.wordResultViewHeight;
-    [self updateWordResultViewHeight:contentHeight];
+    [self updateWordResultViewHeight:self.wordResultView.viewHeight];
 }
 
 - (void)updateWordResultViewHeight:(CGFloat)wordResultViewHeight {
-    if (self.result.htmlString.length) {
-        self.result.webViewManager.wordResultViewHeight = wordResultViewHeight;
-        
-        if (wordResultViewHeight) {
-            self.result.isLoading = NO;
-        }
-    }
-    
     [self.wordResultView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.topBarView.mas_bottom);
         make.left.right.equalTo(self);
@@ -461,18 +438,13 @@
 
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Menu"];
     for (NSString *model in service.selectableModels) {
-        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[service modelSelectionTitleFor:model]
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:model
                                                    action:@selector(modelDidSelected:) keyEquivalent:@""];
         item.target = self;
         item.representedObject = @{ @"model": model, @"service": service };
         item.state = [model isEqualToString:service.model] ? NSControlStateValueOn : NSControlStateValueOff;
         item.toolTip = model.length ? model : item.title;
         [menu addItem:item];
-    }
-    NSString *hint = service.modelSelectionHint;
-    if (hint.length) {
-        [menu addItem:NSMenuItem.separatorItem];
-        [menu addItem:[[NSMenuItem alloc] initWithTitle:hint action:nil keyEquivalent:@""]];
     }
     [menu popUpBelowView:sender];
 }
@@ -500,14 +472,8 @@
     self.serviceModelButton.title = title;
     self.serviceModelButton.hoverTitle = title;
     self.serviceModelButton.highlightTitle = title;
-    self.serviceModelButton.toolTip = [service modelSelectionTitleFor:service.model];
+    self.serviceModelButton.toolTip = service.model;
     [self setNeedsUpdateConstraints:YES];
-}
-
-- (void)copilotModelsDidChange:(NSNotification *)notification {
-    if ([self.service isKindOfClass:EZGitHubCopilotService.class]) {
-        [self updateServiceModelButton];
-    }
 }
 
 #pragma mark - Animation

@@ -71,12 +71,8 @@ public class AppleOCREngine: NSObject {
 
     @objc
     func showOCRWindow(image: NSImage, language: Language = .auto) async throws {
-        let saveLocally = Defaults[.localAutoSave]
         let result = try await recognizeText(image: image, language: language)
         let mergedText = result.mergedText
-        if saveLocally, Defaults[.localAutoSave], !mergedText.isEmpty {
-            logInfo("ocr result: \(mergedText)")
-        }
 
         Task { @MainActor in
             OCRWindowManager.shared.showWindow(
@@ -199,7 +195,6 @@ public class AppleOCREngine: NSObject {
         let mergedText = observations.simpleMergedText
         let detectedLanguage = languageDetector.detectLanguage(text: mergedText)
         let rawProbabilities = languageDetector.rawProbabilities
-        let textAnalysis = languageDetector.getTextAnalysis()
         logInfo(
             "Detected language: \(detectedLanguage), probabilities: \(rawProbabilities.prettyPrinted)"
         )
@@ -221,8 +216,7 @@ public class AppleOCREngine: NSObject {
             ocrResult,
             observations: observations,
             ocrImage: image,
-            smartMerging: smartMerging,
-            textAnalysis: textAnalysis
+            smartMerging: smartMerging
         )
 
         if language == .auto {

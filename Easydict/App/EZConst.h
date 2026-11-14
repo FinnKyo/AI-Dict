@@ -34,7 +34,6 @@ static NSTimeInterval const EZUpdateTableViewRowHeightAnimationDuration = 0.2;
 // !!!: This floating window level shouldn't be higher than kCGModalPanelWindowLevel, otherwise it will cover system modal alert window.
 static CGFloat const EZFloatingWindowLevel = kCGModalPanelWindowLevel;
 
-static NSInteger const EZEnglishWordMaxLength = 20;
 
 /// Show word phrases up to 3
 static NSInteger const EZMaxThreeWordPhraseCount = 3;

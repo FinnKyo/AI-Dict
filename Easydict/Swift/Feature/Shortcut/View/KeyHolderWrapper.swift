@@ -134,8 +134,6 @@ extension KeyHolderWrapper {
                 .silentScreenshotOCR: DefaultsKeyWrapper(.silentScreenshotOCRShortcut),
                 .showMiniWindow: DefaultsKeyWrapper(.showMiniWindowShortcut),
                 .pasteboardTranslate: DefaultsKeyWrapper(.pasteboardTranslateShortcut),
-                .translateAndReplace: DefaultsKeyWrapper(.translateAndReplaceShortcut),
-                .polishAndReplace: DefaultsKeyWrapper(.polishAndReplaceShortcut),
                 .screenshotOCR: DefaultsKeyWrapper(.screenshotOCRShortcut),
                 .pasteboardOCR: DefaultsKeyWrapper(.pasteboardOCRShortcut),
                 .showOCRWindow: DefaultsKeyWrapper(.showOCRWindowShortcut),
@@ -144,16 +142,12 @@ extension KeyHolderWrapper {
                 .copy: DefaultsKeyWrapper(.copyShortcut),
                 .copyFirstResult: DefaultsKeyWrapper(.copyFirstResultShortcut),
                 .focus: DefaultsKeyWrapper(.focusShortcut),
-                .play: DefaultsKeyWrapper(.playShortcut),
                 .retry: DefaultsKeyWrapper(.retryShortcut),
                 .toggle: DefaultsKeyWrapper(.toggleShortcut),
                 .pin: DefaultsKeyWrapper(.pinShortcut),
                 .hide: DefaultsKeyWrapper(.hideShortcut),
                 .increaseFontSize: DefaultsKeyWrapper(.increaseFontSize),
                 .decreaseFontSize: DefaultsKeyWrapper(.decreaseFontSize),
-                .google: DefaultsKeyWrapper(.googleShortcut),
-                .eudic: DefaultsKeyWrapper(.eudicShortcut),
-                .appleDic: DefaultsKeyWrapper(.appleDictionaryShortcut),
             ]
         }
 

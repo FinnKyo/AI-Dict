@@ -29,16 +29,12 @@ extension EasydictMainMenu {
             MainMenuShortcutCommandDataItem(action: .copy),
             MainMenuShortcutCommandDataItem(action: .copyFirstResult),
             MainMenuShortcutCommandDataItem(action: .focus),
-            MainMenuShortcutCommandDataItem(action: .play),
             MainMenuShortcutCommandDataItem(action: .retry),
             MainMenuShortcutCommandDataItem(action: .toggle),
             MainMenuShortcutCommandDataItem(action: .pin),
             MainMenuShortcutCommandDataItem(action: .hide),
             MainMenuShortcutCommandDataItem(action: .increaseFontSize),
             MainMenuShortcutCommandDataItem(action: .decreaseFontSize),
-            MainMenuShortcutCommandDataItem(action: .google),
-            MainMenuShortcutCommandDataItem(action: .eudic),
-            MainMenuShortcutCommandDataItem(action: .appleDic),
         ]
     }
 }
