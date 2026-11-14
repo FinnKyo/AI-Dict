@@ -1,142 +1,114 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/icon_512x512@2x.png" height="256">
-  <h1 align="center">Easydict</h1>
-  <h4 align="center"> Easy to look up words or translate text</h4>
-<p align="center"> 
-<a href="https://github.com/tisfeng/easydict/blob/main/LICENSE">
-<img src="https://img.shields.io/github/license/tisfeng/easydict"
-            alt="License"></a>
-<a href="https://github.com/tisfeng/Easydict/releases">
-<img src="https://img.shields.io/github/downloads/tisfeng/easydict/total.svg"
-            alt="Downloads"></a>
-<a href="https://img.shields.io/badge/-macOS-black?&logo=apple&logoColor=white">
-<img src="https://img.shields.io/badge/-macOS-black?&logo=apple&logoColor=white"
-            alt="macOS"></a>  
+  <img src="./Easydict/App/Assets.xcassets/AIDict-AppIcon.appiconset/icon_256x256@2x.png" height="192">
+  <h1 align="center">AI-Dict</h1>
+  <h4 align="center">面向语言学习者的 macOS AI 辞典与翻译</h4>
+</p>
+
+<p align="center">
+<a href="https://github.com/FinnKyo/AI-Dict/blob/main/LICENSE"><img src="https://img.shields.io/github/license/FinnKyo/AI-Dict" alt="License"></a>
+<a href="https://github.com/FinnKyo/AI-Dict/releases/latest"><img src="https://img.shields.io/github/v/release/FinnKyo/AI-Dict" alt="Release"></a>
+<img src="https://img.shields.io/badge/macOS-13%2B-black?logo=apple&logoColor=white" alt="macOS 13+">
 </p>
 
 <div align="center">
 <a href="./README_ZH.md">中文</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="./README.md">English</a>
 </div>
 
-## Easydict
+## 简介
 
-`Easydict` 是一个简洁易用的词典翻译 macOS App，能够轻松优雅地查找单词或翻译文本。
+AI-Dict 是一款菜单栏辞典与翻译 App。它使用 [OpenRouter](https://openrouter.ai) 上的**免费模型**，
+查单词时给出像有道、MOJi 那样固定版式的**学习者辞典释义**，查句子时给出简洁的翻译。
 
-Easydict 开箱即用，能自动识别输入文本语言，支持输入翻译、划词翻译和 OCR 截图翻译，可同时查询多个翻译服务结果。
+它不是普通的翻译工具，而是为学外语的人设计的：每种语言都有一套参考权威学习词典的专属模板，
+发音、词性、变形、例句、搭配、近义辨析、易错提示等栏目一应俱全，每次查询版式都一样。
 
-**支持的服务：** 覆盖 Apple Dictionary、MDict、Apple 翻译、OpenAI、Gemini、Claude、
-DeepSeek、Ollama、Claude Code、Codex CLI、DeepL、Google、Bing 等 20+ 词典、翻译、AI、
-本地模型和 CLI 服务。完整清单和配置条件见[服务总览](./docs/user-docs/zh/SERVICES.md)。
+AI-Dict 基于开源项目 [Easydict](https://github.com/tisfeng/Easydict) 开发，沿用了它的窗口、
+划词、OCR 和快捷键体系，并删减为只做辞典和翻译两件事。
 
-![Log](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/Log-1688378715.png)
+## 功能
 
-<table>
-    <td> <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-05-28_16.32.18-1685262784.png">
-    <td> <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-05-28_16.32.26-1685262803.png">
-</table>
-
-![immerse-1686534718.gif](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/immerse-1686534718.gif)
-
-## 功能特性
-
-- 🚀 开箱即用，自动识别输入语言
-- 🖱️ 鼠标自动划词和快捷键划词
-- 📸 OCR 截图翻译，静默截图 OCR
-- 🔊 多种 TTS 语音服务
-- 📚 支持 🍎 [苹果系统词典](./docs/user-docs/zh/How-to-use-macOS-system-dictionary-in-Easydict.md) 和 [系统翻译](./docs/user-docs/zh/How-to-use-macOS-system-translation-in-Easydict.md)
-- 🌐 支持 20+ 词典、翻译、AI、本地模型和 CLI 服务
-- 🗣️ 支持 52 种可选翻译语言
-
-**如果觉得这个应用还不错，给个 [Star](https://github.com/tisfeng/Easydict) ⭐️ 支持一下吧 (^-^)**
-
-## 贡献
-
-欢迎通过 issue 和 Pull Request 参与 Easydict 的改进。开发流程和 PR 要求请参阅
-[贡献指南](./CONTRIBUTING.md)。
-
-### AI 辅助编程
-
-欢迎使用 `Codex`、`Claude` 等编程 Agent 参与 Easydict 的开发。建议选择当前最新、适合
-复杂编程任务的 GPT 或 Claude 模型，并仔细 review 和测试最终改动。Agent 开发流程和
-review 要求请参阅[贡献指南](./CONTRIBUTING.md)。
-
-## Issue/PR 处理说明
-
-开发者近期比较忙，通常只有周末才有时间集中处理 issue。我们会优先处理 PR（尤其是修复类 PR）。同时邮件和通知积压较多，部分反馈可能无法第一时间看到或回复，敬请理解。
+- **两种查询，自动判断**
+  - **单词**：生成辞典条目，包括变形和时态，如 `ran`、`食べられなかった`、`跑了`。
+  - **短语和句子**：直接翻译。
+- **17 种语言的专属辞典模板**：中、日、英、韩、法、意、德、西、葡、俄、印尼、泰、印地、马来、
+  越南、阿拉伯、孟加拉。例如：
+  - 英语参考牛津高阶：英美音标、词形变化、CEFR 和考试标签。
+  - 日语参考 MOJi：假名、声调核、活用表、JLPT。
+  - 德语参考 Duden：性、复数、动词三形、支配格。
+- **用你的母语解释**：辞典释义统一使用设置中的「第一语言」。
+- **OpenRouter 免费模型**
+  - 设置中可实时刷新免费模型列表，查看可用状态、近期在线率和提供方。
+  - 可以单独测试某个模型，也能查看账户额度。
+  - 一次只使用一个选定的模型；也可以用 `openrouter/free` 自动路由到可用的免费模型。
+- **不让模型「思考」**：已关闭推理模式，结果几乎立即开始流式输出。
+- **输入、划词、截图三种翻译方式**：截图和静默截图 OCR 使用系统自带的 Vision 识别。
+- 结果以 Markdown 渲染，支持迷你窗口和固定窗口，也可以钉住窗口。
 
 ## 安装
 
-### Homebrew 安装（推荐）
+1. 在 [Releases](https://github.com/FinnKyo/AI-Dict/releases/latest) 下载 `AI-Dict-x.y.z.dmg`。
+2. 打开 DMG，把 **AI-Dict** 拖进「应用程序」文件夹。
+3. 首次打开时，macOS 可能提示「无法验证开发者」。原因是 App 没有经过 Apple 公证。处理方法：
+   - 在「系统设置 → 隐私与安全性」底部点击「仍要打开」；
+   - 或者在终端执行：
+
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/AI-Dict.app
+     ```
+
+## 开始使用
+
+1. **填写 API Key**
+   - 在 [openrouter.ai/keys](https://openrouter.ai/keys) 免费创建一个 Key。
+   - 打开菜单栏图标 →「设置」→「服务」，填入 Key。
+2. **选择模型**
+   - 点击「刷新」获取当前的免费模型。
+   - 选一个状态为绿色的模型，或保留 `openrouter/free`。
+   - 免费模型每天的请求次数有限：账户未充值时每天 50 次，充值过 10 美元以上为每天 1000 次。
+3. **授予权限**：到「系统设置 → 隐私与安全性」中开启：
+   - 「辅助功能」：用于划词翻译。
+   - 「屏幕录制」：用于截图 OCR。
+4. **设置第一语言**：在「设置 → 通用」中设置，辞典释义会使用这个语言。
+
+### 默认快捷键
+
+| 操作 | 快捷键 |
+|---|---|
+| 输入翻译 | ⌥ A |
+| 截图翻译 | ⌥ S |
+| 划词翻译 | ⌥ D |
+| 显示迷你窗口 | ⌥ F |
+| 静默截图 OCR | ⌥ ⇧ S |
+
+用鼠标选中文字后，旁边会出现一个查询图标，点击即可查询。如果选中的文字是你的第一语言，
+默认不显示这个图标；可以在「设置 → 高级」中修改。
+
+## 从源码构建
+
+运行需要 macOS 13 以上；构建请使用最新正式版 Xcode（本项目在 Xcode 27 下开发）。
 
 ```bash
-brew install --cask easydict
+git clone https://github.com/FinnKyo/AI-Dict.git
 ```
 
-### 手动下载安装
+```bash
+cd AI-Dict && open Easydict.xcworkspace
+```
 
-[下载](https://github.com/tisfeng/Easydict/releases) 最新版本的 Easydict。
+在 Xcode 中选择 scheme「Easydict」，按 ⌘R 运行。注意要打开 `.xcworkspace`，不是 `.xcodeproj`。
 
-> [!NOTE]
-> 最新版本支持 macOS 13.0+，如果系统版本为 macOS 11.0+，请使用 [2.7.2](https://github.com/tisfeng/Easydict/releases/tag/2.7.2)
+调试版默认使用临时签名，每次重新编译后，macOS 会让之前授予的辅助功能等权限失效。
+如果想让权限持续有效，可以在项目根目录新建 `Easydict-debug.local.xcconfig`（已被 git 忽略），
+在其中填写你自己的开发证书：
 
----
+```
+DEVELOPMENT_TEAM = <你的 Team ID>
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Manual
+```
 
-## 使用方式
+## 致谢与许可
 
-| 使用方式 | 说明 | 预览 |
-| --- | --- | --- |
-| 输入翻译 | 按输入快捷键（默认 ⌥ + A），输入文本后回车翻译 | ![iShot_2023-01-20_11.28.46-1674185354](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.28.46-1674185354.gif) |
-| 鼠标划词翻译 | 选中文本后出现查询图标，鼠标悬停即可翻译 | ![iShot_2023-01-20_11.01.35-1674183779](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.01.35-1674183779.gif) |
-| 快捷键划词翻译 | 选中文本后按快捷键（默认 ⌥ + D）翻译 | ![iShot_2023-01-20_11.24.37-1674185125](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.24.37-1674185125.gif) |
-| 截图翻译 | 按截图快捷键（默认 ⌥ + S）截取区域翻译 | ![iShot_2023-01-20_11.26.25-1674185209](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.26.25-1674185209.gif) |
-| 静默截图 OCR   | 按下静默截图快捷键（默认 `⌥ + ⇧ + S`），截取需要 OCR 的区域，截图 OCR 结果将自动保存到剪贴板 | ![屏幕录制 2023-05-20 22 39 11](https://github.com/Jerry23011/Easydict/assets/89069957/c16f3c20-1748-411e-be04-11d8fe0e61af)                    |
-
----
-
-## 文档
-
-- 📖 [完整使用指南](./docs/user-docs/zh/GUIDE.md) - 详细功能说明和配置方法
-- 🌐 [服务总览](./docs/user-docs/zh/SERVICES.md) - 完整服务清单和配置条件
-- 🔧 [开发者构建指南](./docs/user-docs/zh/GUIDE.md#开发者构建) - 从源码编译运行
-- 🍎 [如何使用 macOS 系统词典](./docs/user-docs/zh/How-to-use-macOS-system-dictionary-in-Easydict.md)
-- 📚 [如何使用 MDict](./docs/user-docs/zh/How-to-use-MDict-in-Easydict.md)
-- 🍎 [如何使用 macOS 系统翻译](./docs/user-docs/zh/How-to-use-macOS-system-translation-in-Easydict.md)
-- 🌍 [如何帮助翻译 Easydict](./docs/user-docs/zh/How-to-translate-Easydict.md)
-
----
-
-## 致谢
-
-- 这个项目的灵感来自 [saladict](https://github.com/crimx/ext-saladict) 和 [Bob](https://github.com/ripperhe/Bob)，且初始版本是以 [Bob (GPL-3.0)](https://github.com/1xiaocainiao/Bob) 为基础开发。Easydict 在原项目上进行了许多改进和优化，很多功能和 UI 都参考了 Bob。
-- 截图功能是基于 [isee15](https://github.com/isee15) 的 [Capture-Screen-For-Multi-Screens-On-Mac](https://github.com/isee15/Capture-Screen-For-Multi-Screens-On-Mac)，并在此基础上进行了优化。
-- 鼠标划词功能参考了 [PopClip](https://pilotmoon.com/popclip/)。
-
-## 声明
-
-Easydict 为 [GPL-3.0](https://github.com/tisfeng/Easydict/blob/main/LICENSE) 开源协议，仅供学习交流，任何人都可以免费获取该产品和源代码。如果你认为您的合法权益受到侵犯，请立即联系[作者](https://github.com/tisfeng)。你可以自由使用源代码，但必须附上相应的许可证和版权声明。
-
-## 赞助支持
-
-Easydict 作为一个免费开源的非盈利项目，目前主要是作者个人在开发和维护，如果你喜欢这个项目，觉得它对你有帮助，可以考虑赞助支持一下这个项目，用爱发电，让它能够走得更远。
-
-感谢 [@CanglongCl](https://github.com/CanglongCl) 提供的苹果开发者账号，解决了应用 [签名问题](https://github.com/tisfeng/Easydict/issues/2)，让更多人能够方便地使用 Easydict。
-
-<a href="https://afdian.com/a/tisfeng"><img width="20%" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.jpg" alt=""></a>
-
-<div>
-  <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/IMG_4739-1684680971.JPG" width="30%">
-</div>
-
-感谢所有支持者的赞助，详情请查看 [赞助列表](./docs/user-docs/zh/SPONSOR_LIST.md)。
-
----
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=tisfeng%2Feasydict&amp;type=date&amp;legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date&amp;theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date" />
-  </picture>
-</a>
+- AI-Dict 修改自 [Easydict](https://github.com/tisfeng/Easydict)，感谢 tisfeng 及所有贡献者。
+- 本项目与 Easydict 一样，以 [GPL-3.0](./LICENSE) 协议开源。
+- 模型服务由 [OpenRouter](https://openrouter.ai) 提供，AI 生成的释义可能有误，请结合权威词典使用。

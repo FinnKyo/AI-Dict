@@ -1,146 +1,134 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/icon_512x512@2x.png" height="256">
-  <h1 align="center">Easydict</h1>
-  <h4 align="center"> Easy to look up words or translate text</h4>
-<p align="center"> 
-<a href="https://github.com/tisfeng/easydict/blob/main/LICENSE">
-<img src="https://img.shields.io/github/license/tisfeng/easydict"
-            alt="License"></a>
-<a href="https://github.com/tisfeng/Easydict/releases">
-<img src="https://img.shields.io/github/downloads/tisfeng/easydict/total.svg"
-            alt="Downloads"></a>
-<a href="https://img.shields.io/badge/-macOS-black?&logo=apple&logoColor=white">
-<img src="https://img.shields.io/badge/-macOS-black?&logo=apple&logoColor=white"
-            alt="macOS"></a>  
+  <img src="./Easydict/App/Assets.xcassets/AIDict-AppIcon.appiconset/icon_256x256@2x.png" height="192">
+  <h1 align="center">AI-Dict</h1>
+  <h4 align="center">An AI learner's dictionary and translator for macOS</h4>
+</p>
+
+<p align="center">
+<a href="https://github.com/FinnKyo/AI-Dict/blob/main/LICENSE"><img src="https://img.shields.io/github/license/FinnKyo/AI-Dict" alt="License"></a>
+<a href="https://github.com/FinnKyo/AI-Dict/releases/latest"><img src="https://img.shields.io/github/v/release/FinnKyo/AI-Dict" alt="Release"></a>
+<img src="https://img.shields.io/badge/macOS-13%2B-black?logo=apple&logoColor=white" alt="macOS 13+">
 </p>
 
 <div align="center">
 <a href="./README_ZH.md">中文</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href="./README.md">English</a>
 </div>
 
-## Easydict
+## About
 
-`Easydict` is a concise and easy-to-use translation dictionary macOS App that allows you to easily and elegantly look up words or translate text.
+AI-Dict is a menu bar dictionary and translator powered by the **free models** on
+[OpenRouter](https://openrouter.ai). Look up a word and you get a fixed-layout
+**learner's dictionary entry**. Look up a sentence and you get a clean translation.
 
-Easydict is ready to use out of the box, can automatically recognize the language of the input text, supports input translate, select translate, and OCR screenshot translate, and can query multiple translation services results at the same time.
+It is built for language learners rather than as a plain translator. Each language has its
+own template modelled on an established learner's dictionary. Every entry has the same
+sections in the same order: pronunciation, part of speech, inflection, examples,
+collocations, synonym distinctions and common-mistake notes.
 
-**Supported services:** 20+ dictionary, translation, AI, local-model, and CLI services, including
-Apple Dictionary, MDict, Apple Translate, OpenAI, Gemini, Claude, DeepSeek, Ollama, Claude Code,
-Codex CLI, DeepL, Google, and Bing. See the [services overview](./docs/user-docs/en/SERVICES.md) for
-the complete list and access requirements.
-
-![Log](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/Log-1688378715.png)
-
-<table>
-    <td> <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-05-28_16.32.18-1685262784.png">
-    <td> <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-05-28_16.32.26-1685262803.png">
-</table>
-
-![immerse-1686534718.gif](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/immerse-1686534718.gif)
+AI-Dict is based on the open-source [Easydict](https://github.com/tisfeng/Easydict). It
+keeps Easydict's windows, text selection, OCR and shortcuts, trimmed down to two jobs:
+dictionary and translation.
 
 ## Features
 
-- 🚀 Out of the box, automatic language recognition
-- 🖱️ Auto select with mouse and shortcut key
-- 📸 OCR screenshot translation and silent screenshot OCR
-- 🔊 Multiple TTS voice services
-- 📚 Support 🍎 [Apple Dictionary](./docs/user-docs/en/How-to-use-macOS-system-dictionary-in-Easydict.md) and [Apple Translate](./docs/user-docs/en/How-to-use-macOS-system-translation-in-Easydict.md)
-- 🌐 Support 20+ dictionary, translation, AI, local-model, and CLI services
-- 🗣️ Support 52 selectable translation languages
+- **Two query modes, chosen automatically**
+  - **Single words** get a dictionary entry. This includes inflected and tensed forms such
+    as `ran`, `食べられなかった` and `跑了`.
+  - **Phrases and sentences** are translated.
+- **Dedicated templates for 17 languages**: Chinese, Japanese, English, Korean, French,
+  Italian, German, Spanish, Portuguese, Russian, Indonesian, Thai, Hindi, Malay, Vietnamese,
+  Arabic and Bengali. For example:
+  - English follows Oxford Advanced Learner's: UK and US IPA, inflections, CEFR and exam
+    tags.
+  - Japanese follows MOJi: kana, pitch accent, conjugation table and JLPT level.
+  - German follows Duden: gender, plural, principal parts and case government.
+- **Explained in your own language**: entries are always written in the "first language"
+  set in Settings.
+- **OpenRouter free models**
+  - Refresh the live list of free models in Settings, with status, recent uptime and
+    providers.
+  - Test any single model and check your account quota.
+  - One selected model is used at a time, or `openrouter/free` routes each request to any
+    available free model.
+- **No model "thinking"**: reasoning is disabled, so output starts streaming right away.
+- **Input, selection and screenshot translation**: screenshot and silent OCR use Apple
+  Vision on-device.
+- Markdown-rendered results, mini and fixed windows, and pinnable windows.
 
-**If you like this app, please consider giving it a [Star](https://github.com/tisfeng/Easydict) ⭐️, thanks! (^-^)**
+## Install
 
-## Contributing
+1. Download `AI-Dict-x.y.z.dmg` from
+   [Releases](https://github.com/FinnKyo/AI-Dict/releases/latest).
+2. Open the DMG and drag **AI-Dict** into Applications.
+3. On first launch, macOS may say the developer cannot be verified, because the app is not
+   notarized by Apple. To open it anyway, do one of the following:
+   - Click **Open Anyway** at the bottom of System Settings → Privacy & Security.
+   - Or run:
 
-Contributions through issues and pull requests are welcome. Read the Chinese
-[contribution guide](./CONTRIBUTING.md) for the development workflow and pull
-request requirements.
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/AI-Dict.app
+     ```
 
-### AI Coding
+## Getting started
 
-We welcome contributions assisted by programming agents such as `Codex` and
-`Claude`. Prefer the latest available GPT or Claude model suitable for complex
-coding tasks, and carefully review and test the final changes. See the Chinese
-[contribution guide](./CONTRIBUTING.md) for the Agent workflow and
-review requirements.
+1. **Add your API key.** Create a free key at
+   [openrouter.ai/keys](https://openrouter.ai/keys). Then open the menu bar icon →
+   Settings → Service and paste it in.
+2. **Pick a model.**
+   - Click Refresh to load the current free models.
+   - Choose one with a green status, or keep `openrouter/free`.
+   - Free models have a daily request limit: 50 per day, or 1000 per day once your
+     account has bought at least $10 of credits.
+3. **Grant permissions** in System Settings → Privacy & Security:
+   - Accessibility, for selection translation.
+   - Screen Recording, for screenshot OCR.
+4. **Set your first language** in Settings → General. Dictionary entries are written in it.
 
-## Issue/PR Triage Notes
+### Default shortcuts
 
-The maintainer has been quite busy recently and usually only has time to triage issues on weekends. PRs (especially bugfix PRs) are prioritized. Also, due to an overloaded inbox and notifications, some messages may not be seen or replied to promptly. Thanks for your understanding.
+| Action | Shortcut |
+|---|---|
+| Input translation | ⌥ A |
+| Screenshot translation | ⌥ S |
+| Selection translation | ⌥ D |
+| Show mini window | ⌥ F |
+| Silent screenshot OCR | ⌥ ⇧ S |
 
-## Installation
+When you select text with the mouse, a small query icon appears next to it; click it to
+look the text up. By default the icon is not shown for text in your first language. You
+can change this in Settings → Advanced.
 
-### Homebrew Installation (Recommended)
+## Build from source
+
+Running the app needs macOS 13 or later. Build with the latest stable Xcode (the project
+is developed on Xcode 27).
 
 ```bash
-brew install --cask easydict
+git clone https://github.com/FinnKyo/AI-Dict.git
 ```
 
-### Manual Installation
+```bash
+cd AI-Dict && open Easydict.xcworkspace
+```
 
-[Download](https://github.com/tisfeng/Easydict/releases) the latest release.
+In Xcode, select the **Easydict** scheme and press ⌘R. Open `.xcworkspace`, not
+`.xcodeproj`.
 
-> [!NOTE]
-> Latest version supports macOS 13.0+, for older systems please use [2.7.2](https://github.com/tisfeng/Easydict/releases/tag/2.7.2)
+Debug builds are ad-hoc signed by default. After every rebuild, macOS stops honouring the
+Accessibility and other privacy permissions you granted earlier. To keep them, create
+`Easydict-debug.local.xcconfig` in the project root (it is git-ignored) with your own
+development certificate:
 
----
+```
+DEVELOPMENT_TEAM = <your Team ID>
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Manual
+```
 
-## Usage
+## Credits and license
 
-| Ways                      | Description                                                                                                                                  | Preview                                                                                                                                        |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Input Translate           | Press the input translate shortcut key (default `⌥ + A`), enter the text to be translated, and `Enter` key to translate          | ![iShot_2023-01-20_11.28.46-1674185354](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.28.46-1674185354.gif) |
-| Mouse Select Translate    | The query icon is automatically displayed after the word is selected, and the mouse hovers over it to query                                  | ![iShot_2023-01-20_11.01.35-1674183779](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.01.35-1674183779.gif) |
-| Shortcut Select Translate | After selecting the text to be translated, press the shortcut key (default `⌥ + D`)                                                          | ![iShot_2023-01-20_11.24.37-1674185125](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.24.37-1674185125.gif) |
-| Screenshot Translate      | Press the screenshot translate shortcut key (default `⌥ + S`) to capture the area to be translated                                           | ![iShot_2023-01-20_11.26.25-1674185209](https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/iShot_2023-01-20_11.26.25-1674185209.gif) |
-| Silent Screenshot OCR     | Press the Silent Screenshot shortcut key（default `⌥ + ⇧ + S`）to capture the area, the OCR results will be copied directly to the clipboard | ![屏幕录制 2023-05-20 22 39 11](https://github.com/Jerry23011/Easydict/assets/89069957/c16f3c20-1748-411e-be04-11d8fe0e61af)                     |
-
----
-
-## Documentation
-
-- 📖 [Complete Usage Guide](./docs/user-docs/en/GUIDE.md) - Detailed features, configuration and tips
-- 🌐 [Services Overview](./docs/user-docs/en/SERVICES.md) - Complete service list and access requirements
-- 🔧 [Developer Build Guide](./docs/user-docs/en/GUIDE.md#developer-build) - Build and run from source code
-- 🍎 [How to use Apple Dictionary](./docs/user-docs/en/How-to-use-macOS-system-dictionary-in-Easydict.md)
-- 📚 [How to use MDict](./docs/user-docs/en/How-to-use-MDict-in-Easydict.md)
-- 🍎 [How to use Apple Translate](./docs/user-docs/en/How-to-use-macOS-system-translation-in-Easydict.md)
-- 🌍 [How to translate Easydict](./docs/user-docs/en/How-to-translate-Easydict.md)
-
----
-
-## Acknowledgements
-
-- This project was inspired by [saladict](https://github.com/crimx/ext-saladict) and [Bob](https://github.com/ripperhe/Bob), and the initial version was made based on [Bob (GPL-3.0)](https://github.com/1xiaocainiao/Bob). Easydict has made many improvements and optimizations on the original project, and many features and UI are referenced from Bob.
-- Screenshot feature is based on [isee15](https://github.com/isee15)'s [Capture-Screen-For-Multi-Screens-On-Mac](https://github.com/isee15/Capture-Screen-For-Multi-Screens-On-Mac), and optimized on this project.
-- Select text feature is referenced from [PopClip](https://pilotmoon.com/popclip/).
-
-## Statement
-
-Easydict is licensed under the [GPL-3.0](https://github.com/tisfeng/Easydict/blob/main/LICENSE) open source license, which is for learning and communication only. Anyone can get this product and source code for free. If you believe that your legal rights have been violated, please contact the [author](https://github.com/tisfeng) immediately. You can use the source code freely, but you must attach the corresponding license and copyright.
-
-## Sponsor
-
-Easydict is a free and open source project, currently mainly developed and maintained by the author. If you like this project and find it helpful, you can consider sponsoring this project to support it, so that it can go further.
-
-Thanks to [@CanglongCl](https://github.com/CanglongCl) for providing the Apple Developer account, which solved the app [signature issue](https://github.com/tisfeng/Easydict/issues/2), allowing more people to use Easydict conveniently.
-
-<a href="https://afdian.com/a/tisfeng"><img width="20%" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.jpg" alt=""></a>
-
-<div>
-  <img src="https://raw.githubusercontent.com/tisfeng/ImageBed/main/uPic/IMG_4739-1684680971.JPG" width="30%">
-</div>
-
-Thanks to all sponsors for their generous support. For details, please see the [Sponsor List](./docs/user-docs/en/SPONSOR_LIST.md).
-
----
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=tisfeng%2Feasydict&amp;type=date&amp;legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date&amp;theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tisfeng%2Feasydict&amp;type=Date" />
-  </picture>
-</a>
+- AI-Dict is a modified version of [Easydict](https://github.com/tisfeng/Easydict). Thanks
+  to tisfeng and all Easydict contributors.
+- Like Easydict, it is released under [GPL-3.0](./LICENSE).
+- Model access is provided by [OpenRouter](https://openrouter.ai). AI-generated entries can
+  contain mistakes, so check important details against an authoritative dictionary.

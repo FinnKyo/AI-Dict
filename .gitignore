@@ -111,3 +111,4 @@ BuildTools/.swiftpm
 *.zip
 *.app
 *.dmg
+dist/
